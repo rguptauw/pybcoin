@@ -1,1 +1,1 @@
-## PyBcoin - A statistcal model to forecast bitcoin price trends.
+## PyBcoin - A statistical model to forecast bitcoin price trends.
