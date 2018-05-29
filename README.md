@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/rguptauw/pybcoin.svg?branch=master)](https://travis-ci.org/rguptauw/pybcoin)
 [![Coverage Status](https://coveralls.io/repos/github/rguptauw/pybcoin/badge.svg?branch=master)](https://coveralls.io/github/rguptauw/pybcoin?branch=master)
+ [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+ [![License: ODbL](https://img.shields.io/badge/License-ODbL-brightgreen.svg)](https://opendatacommons.org/licenses/odbl/)
 
 ## PyBcoin - A forcasting tool to analyze Bitcoin trend.
 PyBcoin is a Bitcoin trend forecasting tool which predicts the next days momentum of Bitcoin price based on historical data of Bitcoin, user sentiments on twitter and reddit alongside various commodity prices. The User interface for this forecasting tool is a Dash app.
