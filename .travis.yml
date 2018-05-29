@@ -5,7 +5,6 @@ env:
 # command to install dependencies
 os:
   - linux
-  - osx
 
 install:
   # Install conda
