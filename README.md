@@ -1,3 +1,4 @@
+[![PyPI version](https://badge.fury.io/py/pybcoin.svg)](https://badge.fury.io/py/pybcoin)
 [![Build Status](https://travis-ci.org/rguptauw/pybcoin.svg?branch=master)](https://travis-ci.org/rguptauw/pybcoin)
 [![Coverage Status](https://coveralls.io/repos/github/rguptauw/pybcoin/badge.svg?branch=master)](https://coveralls.io/github/rguptauw/pybcoin?branch=master)
  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
