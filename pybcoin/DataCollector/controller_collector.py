@@ -2,13 +2,15 @@
     Module name: controller_collector
     Description: Controller module for all data collection.
 """
+
 import logging
 
-from btc_data_collector import BtcDataCollector
-from google_trends_collector import GTrendsDataCollector
-from market_data_collector import MarketDataCollector
-from reddit_comment_collector import RedditDataCollector
-from tweets_collector import TwitterDataCollector
+
+from pybcoin.DataCollector.btc_data_collector import BtcDataCollector
+from pybcoin.DataCollector.google_trends_collector import GTrendsDataCollector
+from pybcoin.DataCollector.market_data_collector import MarketDataCollector
+from pybcoin.DataCollector.reddit_comment_collector import RedditDataCollector
+from pybcoin.DataCollector.tweets_collector import TwitterDataCollector
 
 from configparser import SafeConfigParser
 
@@ -77,7 +79,7 @@ class ControllerCollector(object):
             data = collector.fetch_nyse_index()
             if data == -1:
                 return collection_complete
-            data.to_csv('./data/commodity/nyse_index.csv')
+            data.to_csv('./data/latest/nyse_index.csv')
 
             # Collecting Crude Oil Price
             data = collector.fetch_oil_price()
@@ -90,14 +92,14 @@ class ControllerCollector(object):
             data = collector.fetch_tweets()
             if data == -1:
                 return collection_complete
-            data.to_csv('./data/latest/tweets.csv')
+            data.to_csv('./data/latest/tweets.csv', index=False)
 
             # Collecting Tweets
             collector = RedditDataCollector(self.config)
             data = collector.fetch_reddit_comments()
             if data == -1:
                 return collection_complete
-            data.to_csv('./data/latest/reddit_comments.csv')
+            data.to_csv('./data/latest/reddit_comments.csv', index=False)
 
             collection_complete = True
             print('Data Collection complete')
@@ -107,7 +109,6 @@ class ControllerCollector(object):
             print(e)
             return collection_complete
 
-
-controller = ControllerCollector('./pybcoin/config/config.ini')
-val = controller.data_collection_pipeline()
-print(val)
+# controller = ControllerCollector('./pybcoin/config/config.ini')
+# val = controller.data_collection_pipeline()
+# print(val)

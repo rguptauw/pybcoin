@@ -29,10 +29,16 @@ config.set('Twitter', 'tweet-count-url', tweet_count_url)
 
 config.add_section('Reddit')
 config.set('Reddit', 'api-uri', api_uri)
-config.set('Reddit', 'json_path','./data/latest/output.json')
+config.set('Reddit', 'json_path','./pybcoin/test/data/output.json')
+
+config.add_section('Forecast')
+config.set('Forecast', 'in_path_btc', './pybcoin/test/data/btc/')
+config.set('Forecast', 'in_path_comm','./pybcoin/test/data/commodity/')
+config.set('Forecast', 'in_path_gtrends','./pybcoin/test/data/gtrends/')
+config.set('Forecast', 'out_path','./pybcoin/test/data/')
 
 config.add_section('Quandl')
 config.set('Quandl', 'quandl-key', '')
 
-with open('./pybcoin/config/config.ini', 'w') as f:
+with open('./pybcoin/config/config_test.ini', 'w') as f:
     config.write(f)

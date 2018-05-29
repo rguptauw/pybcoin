@@ -49,7 +49,8 @@ class RedditDataCollector(object):
                 single_date_utc = single_date.timetuple()
                 single_date_utc = time.mktime(single_date_utc)
                 url = self.api_uri
-                url = url.replace('START_UTC', str(int(single_date_utc-86400)))
+                url = url.replace('START_UTC',
+                                  str(int(single_date_utc - 86400)))
                 url = url.replace('END_UTC', str(int(single_date_utc)))
                 res = requests.get(url)
                 data = res.json()

@@ -50,8 +50,8 @@ class BtcDataCollector(object):
             start_date = today - timedelta(days=1)
             btc_price = pd.DataFrame([{
                 'Date': start_date.strftime("%Y-%m-%d"),
-                'btc_price': BtcConverter().get_previous_price(
-                                                'USD', start_date)}])
+                'btc_price': BtcConverter(
+                ).get_previous_price('USD', start_date)}])
             return btc_price.set_index('Date')
         except Exception as e:
             # self.logger.error(e)
@@ -75,7 +75,7 @@ class BtcDataCollector(object):
             start_date = today - timedelta(days=day_count)
             url = self.tweet_count_url
             page = requests.get(url)
-            first = '[new Date("'+start_date.strftime("%Y/%m/%d")+'"),'
+            first = '[new Date("' + start_date.strftime("%Y/%m/%d") + '"),'
             last = ']'
             start = page.text.rindex(first) + len(first)
             end = page.text.find(last, start)
@@ -85,9 +85,8 @@ class BtcDataCollector(object):
             else:
                 count = int(page.text[start:end])
             tweet_count = pd.DataFrame({
-                            'Date': [start_date.strftime("%Y/%m/%d")],
-                            'tweet_count': [count]
-                            })
+                'Date': [start_date.strftime("%Y/%m/%d")],
+                'tweet_count': [count]})
             return tweet_count.set_index('Date')
         except Exception as e:
             # self.logger.error(e)

@@ -44,9 +44,8 @@ class MarketDataCollector(object):
             today = datetime.now()
             start_date = today - timedelta(days=day_count)
             usd_eur_rate = pd.DataFrame([{
-                            'Date': start_date.strftime("%Y-%m-%d"),
-                            'forex_rate': CurrencyRates()
-                                        .get_rate('USD', 'EUR')}])
+                'Date': start_date.strftime("%Y-%m-%d"),
+                'forex_rate': CurrencyRates().get_rate('USD', 'EUR')}])
             return usd_eur_rate.set_index('Date').tail(n=1)
         except Exception as e:
             # self.logger.error(e)
@@ -69,6 +68,7 @@ class MarketDataCollector(object):
 
             oil_price = quandl.get("OPEC/ORB",
                                    start_date=start_date.strftime("%Y-%m-%d"))
+            oil_price.rename(columns={'value': 'oil_price'})
             return oil_price.tail(n=1)
         except Exception as e:
             # self.logger.error(e)

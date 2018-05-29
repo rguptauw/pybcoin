@@ -23,7 +23,6 @@ class GTrendsDataCollector(object):
 
     def __init__(self, params=None):
         self.logger = logging.getLogger('simpleExample')
-        pass
 
     def fetch_trends(self, params=None):
         """

@@ -34,10 +34,10 @@ class BtcModelPrediction(object):
 
     # constructor function
     def __init__(self, params):
-        self.in_path_btc = params['in_path_btc']
-        self.in_path_comm = params['in_path_comm']
-        self.in_path_gtrends = params['in_path_gtrends']
-        self.out_path = params['out_path']
+        self.in_path_btc = params['Forecast']['in_path_btc']
+        self.in_path_comm = params['Forecast']['in_path_comm']
+        self.in_path_gtrends = params['Forecast']['in_path_gtrends']
+        self.out_path = params['Forecast']['out_path']
 
     # function to create a time series prediction
     def time_prediction(self):
@@ -75,7 +75,7 @@ class BtcModelPrediction(object):
             return ts_res
 
         except Exception as e:
-            print (e)
+            print(e)
             return error_val
 
     # function to create a linear regression model
@@ -93,8 +93,7 @@ class BtcModelPrediction(object):
         error_val = -1
         try:
             oil_data = pd.read_csv(self.in_path_comm + 'oil_price.csv')
-            google_data = pd.read_csv(self.in_path_gtrends
-                                      + 'GTrendsData_old.csv')
+            google_data = pd.read_csv(self.in_path_gtrends + 'gtrends.csv')
             btc_data = pd.read_csv(self.in_path_btc + 'btc_price.csv')
 
             # merging all the datasets
@@ -140,7 +139,7 @@ class BtcModelPrediction(object):
             pred_reg = regressor.predict(X_day)[0]
             return pred_reg
         except Exception as e:
-            print (e)
+            print(e)
             return error_val
 
     # defining a function to create a composite prediction
@@ -154,13 +153,14 @@ class BtcModelPrediction(object):
         """
         error_val = -1
         try:
-            final_yhat = (self.time_prediction() + self.linear_prediction())/2
+            final_yhat = (self.time_prediction() +
+                          self.linear_prediction()) / 2
             # predicted direction
             res_dir = final_yhat - self.curr_price
             res = 1 if np.sign(res_dir) == 1.0 else 0
             # confidence calculation
-            ci = np.absolute(res_dir)/self.curr_price
-            ci_f = round(ci*10, 2)
+            ci = np.absolute(res_dir) / self.curr_price
+            ci_f = round(ci * 10, 2)
             # creating the row to append finally
             today_date = datetime.datetime.strptime(self.today_date,
                                                     '%Y-%m-%d')
@@ -176,5 +176,5 @@ class BtcModelPrediction(object):
                 writer = csv.writer(f)
                 writer.writerow(app_list)
         except Exception as e:
-            print (e)
+            print(e)
             return error_val
