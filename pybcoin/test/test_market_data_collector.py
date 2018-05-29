@@ -27,7 +27,7 @@ class MarketDataCollectorTest(TestCase):
                   autospec=True)
     def test_fetch_usd_exrate(self, mock_fetch_usd_exrate):
         self.collector.fetch_usd_exrate()
-        self.assertEqual(mock_fetch_usd_exrate.call_count , 1)
+        self.assertEqual(mock_fetch_usd_exrate.call_count, 1)
 
     """
     Test function for test_fetch_oil_price.
@@ -37,7 +37,7 @@ class MarketDataCollectorTest(TestCase):
     @patch.object(quandl, 'get', autospec=True)
     def test_fetch_oil_price(self, mock_get):
         self.collector.fetch_oil_price()
-        self.assertEqual(mock_get.call_count , 1)
+        self.assertEqual(mock_get.call_count, 1)
 
     """
     Test function for test_fetch_nyse_index.
@@ -47,4 +47,4 @@ class MarketDataCollectorTest(TestCase):
     @patch('pybcoin.DataCollector.market_data_collector.get_prices_data')
     def test_fetch_nyse_index(self, mock_get_prices_data):
         self.collector.fetch_nyse_index()
-        self.assertEqual(mock_get_prices_data.call_count , 1)
+        self.assertEqual(mock_get_prices_data.call_count, 1)

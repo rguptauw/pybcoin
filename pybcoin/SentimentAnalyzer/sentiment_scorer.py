@@ -60,7 +60,5 @@ class SentimentAnalyzer(object):
                                 })
 
         text_df = text_df.groupby(['Date']).apply(
-                                                  self.__sentiment_count__
-                                                  ).reset_index().drop(
-                                                  ['level_1'], axis=1)
+            self.__sentiment_count__).reset_index().drop(['level_1'], axis=1)
         text_df.to_csv(self.path + keyword + '_sentiment.csv', index=False)

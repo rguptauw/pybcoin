@@ -4,11 +4,11 @@
 
 from unittest import TestCase
 
-import nose
 import pandas as pd
 from configparser import SafeConfigParser
 
 from pybcoin.SentimentAnalyzer.sentiment_scorer import SentimentAnalyzer
+
 
 class SentimenetAnalyzerTest(TestCase):
 
@@ -27,7 +27,8 @@ class SentimenetAnalyzerTest(TestCase):
         """
         Checks that twitter csv is written on test folder.
         """
-        sentiment_data = self.collector.sentiment_scorer(keyword='tweets')
-        test_sentiment = pd.read_csv(self.collector.path + 'tweets_sentiment.csv')
+        self.collector.sentiment_scorer(keyword='tweets')
+        test_sentiment = pd.read_csv(self.collector.path +
+                                     'tweets_sentiment.csv')
         flag = test_sentiment.empty
-        self.assertEqual(flag,False)
+        self.assertEqual(flag, False)
