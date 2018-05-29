@@ -78,7 +78,7 @@ def remove_delimiters(text):
         : return text(str)
     """
     delimiters = ",.!?/&-:;@'+% =>_..."
-    return ' '.join(w for w in re.split("[" + "\\".join(delimiters) + "]",
+    return ' '.join(w for w in re.split("["+"\\".join(delimiters)+"]",
                     text) if w)
 
 

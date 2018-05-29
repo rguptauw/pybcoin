@@ -23,7 +23,7 @@ class SentimentAnalyzer(object):
     def __init__(self, config):
         self.logger = logging.getLogger('simpleExample')
         self.analyzer = SentimentIntensityAnalyzer()
-        self.path = config['Sentiment', 'text_path']
+        self.path = config['Sentiment']['text_csv_path']
 
     def __sentiment_count__(self, grouped_Data):
         """
@@ -39,14 +39,14 @@ class SentimentAnalyzer(object):
         })
         return grouped_sentiment
 
-    def sentiment_scorer(self, keyword='twitter'):
+    def sentiment_scorer(self, keyword='tweets'):
         """
             Method to Return Daily Positive and Negative sentiment
             : param self
+                    keyword: keywords specifying tweets or reddit_comments
             : return text_df(pandas Dataframes)
         """
-
-        text_data = pre_process_data(self.path)
+        text_data = pre_process_data(self.path + keyword + '.csv')
         sentiment = []
         date = []
 
@@ -60,6 +60,7 @@ class SentimentAnalyzer(object):
                                 })
 
         text_df = text_df.groupby(['Date']).apply(
-            self.__sentiment_count__).reset_index().drop(['level_1'], axis=1)
-        text_df.to_csv('./data/latest/' + keyword +
-                       '_sentiment.csv', index=False)
+                                                  self.__sentiment_count__
+                                                  ).reset_index().drop(
+                                                  ['level_1'], axis=1)
+        text_df.to_csv(self.path + keyword + '_sentiment.csv', index=False)

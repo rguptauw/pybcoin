@@ -25,4 +25,4 @@ class TwitterDataCollectorTest(TestCase):
     @patch.object(tweepy, 'Cursor', autospec=True)
     def test_fetch_tweets(self, mock_get_tweets):
         self.collector.fetch_tweets()
-        mock_get_tweets.assert_called_once()
+        self.assertEqual(mock_get_tweets.call_count , 1)

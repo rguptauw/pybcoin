@@ -29,4 +29,4 @@ class GTrendsDataCollectorTest(TestCase):
     def test_fetch_trends(self, mock_build_payload,
                           mock_interest_over_time):
         self.collector.fetch_trends()
-        mock_interest_over_time.assert_called_once()
+        self.assertEqual(mock_interest_over_time.call_count , 1)

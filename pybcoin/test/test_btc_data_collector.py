@@ -28,14 +28,14 @@ class BtcDataCollectorTest(TestCase):
                   autospec=True)
     def fetch_btc_price(self, mock_get_previous_price):
         self.collector.fetch_btc_price()
-        mock_get_previous_price.assert_called_once()
+        self.assertEqual(mock_get_previous_price.call_count , 1)
 
     @patch('pybcoin.DataCollector.btc_data_collector.requests.get')
     def test_fetch_tweet_counts(self, mock_get):
         self.collector.fetch_tweet_counts()
-        mock_get.assert_called_once()
+        self.assertEqual(mock_get.call_count , 1)
 
     @patch.object(quandl, 'get', autospec=True)
     def test_fetch_transaction_volume(self, mock_get):
         self.collector.fetch_transaction_volume()
-        mock_get.assert_called_once()
+        self.assertEqual(mock_get.call_count , 1)
