@@ -14,8 +14,8 @@ install:
   - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
   - hash -r
-  - conda update -q conda --yes
-  - conda create -n ci "python=$PYTHON_VERSION"
+  - conda update --yes conda
+  - conda create --yes -n ci "python=$PYTHON_VERSION"
   - source activate ci
   - which python
   - which pip
