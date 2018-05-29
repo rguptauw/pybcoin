@@ -39,3 +39,9 @@ Once done installing requisite packages, Run the the following command:
 `python pybcoin/controller.py`
 
 This will open a Intercative Dash app.
+
+__Using Pip__
+
+The package can also be installed from pypi using:
+
+`pip install pybcoin`
