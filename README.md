@@ -12,7 +12,7 @@ The following is a screenshot of the app in this repo:
 
 __Python Version 3.4 or Later__
 
-These Package is developed on Linux using Python 3.4 / 3.5 / 3.6 (the Anaconda distribution).
+This Package is developed on Linux using Python 3.4 / 3.5 / 3.6 (the Anaconda distribution).
 
 __Environment__
 
