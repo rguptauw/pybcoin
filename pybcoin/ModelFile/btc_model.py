@@ -34,10 +34,10 @@ class BtcModelPrediction(object):
 
     # constructor function
     def __init__(self, params):
-        self.in_path_btc = dic_temp['in_path_btc']
-        self.in_path_comm = dic_temp['in_path_comm']
-        self.in_path_gtrends = dic_temp['in_path_gtrends']
-        self.out_path = dic_temp['out_path']
+        self.in_path_btc = params['in_path_btc']
+        self.in_path_comm = params['in_path_comm']
+        self.in_path_gtrends = params['in_path_gtrends']
+        self.out_path = params['out_path']
 
     # function to create a time series prediction
     def time_prediction(self):
@@ -178,15 +178,3 @@ class BtcModelPrediction(object):
         except Exception as e:
             print (e)
             return error_val
-
-
-# creating a temporary dictionary
-dic_temp = {'in_path_btc': './data/btc/',
-            'in_path_comm': './data/commodity/',
-            'in_path_gtrends': './data/gtrends/',
-            'out_path': './data/'}
-
-# running the object
-test = BtcModelPrediction(dic_temp)
-result = test.final_prediction()
-print result
