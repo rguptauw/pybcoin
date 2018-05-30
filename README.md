@@ -6,7 +6,7 @@
 ## PyBcoin - A forcasting tool to analyze Bitcoin trend.
 PyBcoin is a Bitcoin trend forecasting tool which predicts the next days momentum of Bitcoin price based on historical data of Bitcoin, user sentiments on twitter and reddit alongside various commodity prices. The User interface for this forecasting tool is a Dash app.
 
-The following is a screenshot of the app in this repo:
+The following is a screenshot of the app in this repo  [App](http://tejasjuw.pythonanywhere.com/):
 
 ![Alt desc](https://github.com/rguptauw/pybcoin/blob/master/pybcoin/static/App.PNG)
 
