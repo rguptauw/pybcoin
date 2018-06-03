@@ -9,7 +9,7 @@ import pandas as pd
 from configparser import SafeConfigParser
 
 from pybcoin.SentimentAnalyzer.sentiment_scorer import SentimentAnalyzer
-from utils.pre_processing import pre_process_data, create_word_cloud
+from utils.pre_processing import create_word_cloud
 
 
 class SentimenetAnalyzerTest(TestCase):
@@ -45,13 +45,14 @@ class SentimenetAnalyzerTest(TestCase):
         self.collector.sentiment_scorer(keyword='tweets')
         test_col_names = pd.read_csv(self.collector.path +
                                      'tweets_sentiment.csv').columns
-        self.assertEqual(sorted(test_col_names),['Date', 'neg_count', 'pos_count'])
+        self.assertEqual(sorted(test_col_names),
+                         ['Date', 'neg_count', 'pos_count'])
 
     def test_sentiment_wordcloud(self):
 
         """
         Checks that wordcloud is generated.
         """
-        create_word_cloud(self.text,self.date)
+        create_word_cloud(self.text, self.date)
         self.assertEqual(os.path.isfile('./pybcoin/test/data/' +
                                         'date_22-05-2018.png'), False)
