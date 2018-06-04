@@ -85,7 +85,7 @@ class BtcModelPrediction(object):
             app_list.append(future['yhat'][0])
 
             # writing to the file
-            with open(self.path_time_pred + 'predicted_time.csv', 'ab') as f:
+            with open(self.path_time_pred + 'predicted_time.csv', 'a') as f:
                 writer = csv.writer(f)
                 writer.writerow(app_list)
 
@@ -238,7 +238,7 @@ class BtcModelPrediction(object):
             res = 1 if np.sign(final_yhat)[0] == 1.0 else 0
 
             # confidence calculation
-            ci = round((np.absolute(final_yhat)/0.05), 2)
+            ci = round((np.absolute(final_yhat[0])/0.05), 2)
             ci_f = ci if ci < 1 else 1
 
             # creating the row to append finally
@@ -252,10 +252,21 @@ class BtcModelPrediction(object):
             app_list.append(ci_f)
 
             # writing to the file
-            with open(self.out_path + 'BitcoinPrice.csv', 'ab') as f:
+            with open(self.out_path + 'BitcoinPrice.csv', 'a') as f:
                 writer = csv.writer(f)
                 writer.writerow(app_list)
 
         except Exception as e:
             print(e)
             return error_val
+
+dic_temp = {'in_path_btc' : '/home/rohit/Desktop/crypto_tweet/data_project/', 
+            'in_path_comm' : '/home/rohit/Desktop/crypto_tweet/data_project/',
+            'in_path_gtrends' : '/home/rohit/Desktop/crypto_tweet/data_project/',
+            'in_path_social': '/home/rohit/Desktop/crypto_tweet/data_project/',
+            'out_path' : '/home/rohit/Desktop/crypto_tweet/data_project/',
+            'path_time_pred' : '/home/rohit/Desktop/crypto_tweet/data_project/'}
+
+# initializing the class
+sample = BtcModelPrediction(dic_temp)
+sample.final_prediction()
