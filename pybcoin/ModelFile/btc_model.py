@@ -1,7 +1,7 @@
 """
     Module name: btc_model
     Description: Module for predicting bitcoin price direction based on
-    external regressors and bitcoin time series.
+    external regressors and time series.
 """
 
 # importing modules
@@ -37,10 +37,13 @@ class BtcModelPrediction(object):
         self.in_path_btc = params['in_path_btc']
         self.in_path_comm = params['in_path_comm']
         self.in_path_gtrends = params['in_path_gtrends']
+        self.in_path_social = params['in_path_social']
+        self.path_time_pred = params['path_time_pred']
         self.out_path = params['out_path']
 
     # function to create a time series prediction
     def time_prediction(self):
+
         """
             Method to predict the BTC price for one day based on historical
             prices. Uses a library 'prophet' made open-source by Facebook.
@@ -63,7 +66,7 @@ class BtcModelPrediction(object):
             # training from fbprophet
             # prophet module requires columns ds (date) and y (value)
             candles = btc_data.rename(columns={'utc_time': 'ds',
-                                               'btc_price': 'y'})
+                                      'btc_price': 'y'})
             m = Prophet(yearly_seasonality=True, daily_seasonality=False,
                         changepoint_prior_scale=0.001)
             m.fit(candles)
@@ -71,21 +74,35 @@ class BtcModelPrediction(object):
             # making the predictions
             future = m.make_future_dataframe(periods=1, include_history=False)
             future = m.predict(future)
-            ts_res = future['yhat'][0]
-            return ts_res
+
+            # creating the row to append to the time series dataset
+            today_date = datetime.datetime.strptime(self.today_date,
+                                                    '%Y-%m-%d')
+            pred_date = today_date + datetime.timedelta(days=1)
+            pred_date = pred_date.strftime("%m/%d/%Y")
+
+            app_list = [pred_date]
+            app_list.append(future['yhat'][0])
+
+            # writing to the file
+            with open(self.path_time_pred + 'predicted_time.csv', 'ab') as f:
+                writer = csv.writer(f)
+                writer.writerow(app_list)
+
+            return future['yhat']
 
         except Exception as e:
-            print (e)
+            print(e)
             return error_val
 
     # function to create a linear regression model
     def linear_prediction(self):
+
         """
             Method to predict BTC price for next day on external regressors:
                 1. Oil Price
                 2. Google trends
             Uses scikit learn library to run linear regression.
-
             : param self
             : return pred_reg(float)
                      error_val(int)
@@ -96,34 +113,89 @@ class BtcModelPrediction(object):
             google_data = pd.read_csv(self.in_path_gtrends
                                       + 'GTrendsData_old.csv')
             btc_data = pd.read_csv(self.in_path_btc + 'btc_price.csv')
+            twitter_sentiment = pd.read_csv(self.in_path_social
+                                            + 'twitter_sentiment.csv')
+            reddit_sentiment = pd.read_csv(self.in_path_social
+                                           + 'reddit_sentiment.csv')
 
             # merging all the datasets
-            df = pd.merge(btc_data, oil_data, left_on='utc_time',
-                          right_on='Date')
-            del df['Date']
-            df = pd.merge(df, google_data, left_on='utc_time',
-                          right_on='date')
+            df = pd.merge(btc_data, oil_data,
+                          left_on='utc_time', right_on='dates_s')
+            del df['dates_s']
+            df = pd.merge(df, google_data, left_on='utc_time', right_on='date')
             del df['date']
-            df['google_hits'] = df['btc'] + df['bitcoin'] + df['btc usd']
-            + df['btcusd']
+            df = pd.merge(df, twitter_sentiment,
+                          left_on='utc_time', right_on='Date')
+            del df['Date']
+
+            # renaming columns name for twitter
+            df = df.rename(columns={'Negative': 'twitter_negative'})
+            df = df.rename(columns={'Positive': 'twitter_positive'})
+            df = pd.merge(df, reddit_sentiment,
+                          left_on='utc_time', right_on='Date')
+            del df['Date']
+
+            # renaming columns name for reddit
+            df = df.rename(columns={'Negative': 'reddit_negative'})
+            df = df.rename(columns={'Positive': 'reddit_positive'})
+
+            # getting relevant computations from social data
+            df['google_hits'] = (df['btc'] + df['bitcoin']
+                                 + df['btc usd'] + df['btcusd'])
+            df['twitter'] = (df['twitter_positive']/(df['twitter_positive']
+                             + df['twitter_negative']))
+            df['reddit'] = (df['reddit_positive']/(df['reddit_positive']
+                            + df['reddit_negative']))
 
             # selecting only relevant columns
-            df = df[['utc_time', 'oil_price', 'google_hits', 'btc_price']]
+            df = df[['utc_time', 'oil_price', 'google_hits', 'twitter',
+                    'reddit', 'btc_price']]
 
-            # shifting the btc price by +1 day, want to predict for next day
-            df['btc_price_next'] = 0
+            # initializing the columns of price deltas
+            df['btc_delta'] = 0
+            df['oil_delta'] = 0
+            df['google_delta'] = 0
+            df['twitter_delta'] = 0
+            df['reddit_delta'] = 0
+
+            # computing the percentage change for all rows
+            for i in range(1, len(df)):
+                df['btc_delta'].iloc[i] = ((df['btc_price'].iloc[i]
+                                           - df['btc_price'].iloc[i - 1])
+                                           / df['btc_price'].iloc[i - 1])
+                df['oil_delta'].iloc[i] = ((df['oil_price'].iloc[i]
+                                           - df['oil_price'].iloc[i - 1])
+                                           / df['oil_price'].iloc[i - 1])
+                df['google_delta'].iloc[i] = ((df['google_hits'].iloc[i]
+                                              - df['google_hits'].iloc[i - 1])
+                                              / df['google_hits'].iloc[i - 1])
+                df['twitter_delta'].iloc[i] = ((df['twitter'].iloc[i]
+                                               - df['twitter'].iloc[i - 1])
+                                               / df['twitter'].iloc[i - 1])
+                df['reddit_delta'].iloc[i] = ((df['reddit'].iloc[i]
+                                              - df['reddit'].iloc[i - 1])
+                                              / df['reddit'].iloc[i - 1])
+
+            # shifting the btc price by +1 day, want to predict for  next day
+            df['btc_delta_pred'] = 0
             for i in range(0, len(df) - 1):
-                df['btc_price_next'].iloc[i] = df['btc_price'].iloc[i + 1]
+                df['btc_delta_pred'].iloc[i] = df['btc_delta'].iloc[i + 1]
+
+            # selecting only relevant columns
+            df = df[['utc_time', 'oil_delta', 'google_delta', 'twitter_delta',
+                     'reddit_delta', 'btc_price', 'btc_delta',
+                     'btc_delta_pred']]
 
             # preparing the dataset for linear regression
-            df_lin = df[['oil_price', 'google_hits', 'btc_price_next']]
+            df_lin = df[['oil_delta', 'google_delta', 'twitter_delta',
+                        'reddit_delta', 'btc_delta_pred']]
 
             # response index number
             resp_idx = df_lin.shape[1] - 1
 
             # last row are the new features with which prediction is to be made
             feature_day = df_lin.iloc[-1]
-            del feature_day['btc_price_next']
+            del feature_day['btc_delta_pred']
             X_day = feature_day.as_matrix()
             X_day = X_day.reshape(1, -1)
 
@@ -139,8 +211,9 @@ class BtcModelPrediction(object):
             regressor.fit(X, y)
             pred_reg = regressor.predict(X_day)[0]
             return pred_reg
+
         except Exception as e:
-            print (e)
+            print(e)
             return error_val
 
     # defining a function to create a composite prediction
@@ -154,13 +227,20 @@ class BtcModelPrediction(object):
         """
         error_val = -1
         try:
-            final_yhat = (self.time_prediction() + self.linear_prediction())/2
+            time_data = pd.read_csv(self.path_time_pred + 'predicted_time.csv')
+            price_old = time_data['predicted_price_time'].iloc[-2]
+            time_ratio = (self.time_prediction() - price_old)/price_old
+            reg_ratio = self.linear_prediction()
+
+            final_yhat = reg_ratio*0.8 + time_ratio*0.2
+
             # predicted direction
-            res_dir = final_yhat - self.curr_price
-            res = 1 if np.sign(res_dir) == 1.0 else 0
+            res = 1 if np.sign(final_yhat)[0] == 1.0 else 0
+
             # confidence calculation
-            ci = np.absolute(res_dir)/self.curr_price
-            ci_f = round(ci*10, 2)
+            ci = round((np.absolute(final_yhat)/0.05), 2)
+            ci_f = ci if ci < 1 else 1
+
             # creating the row to append finally
             today_date = datetime.datetime.strptime(self.today_date,
                                                     '%Y-%m-%d')
@@ -175,6 +255,7 @@ class BtcModelPrediction(object):
             with open(self.out_path + 'BitcoinPrice.csv', 'ab') as f:
                 writer = csv.writer(f)
                 writer.writerow(app_list)
+
         except Exception as e:
-            print (e)
+            print(e)
             return error_val
