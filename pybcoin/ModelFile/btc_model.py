@@ -259,14 +259,3 @@ class BtcModelPrediction(object):
         except Exception as e:
             print(e)
             return error_val
-
-dic_temp = {'in_path_btc' : '/home/rohit/Desktop/crypto_tweet/data_project/', 
-            'in_path_comm' : '/home/rohit/Desktop/crypto_tweet/data_project/',
-            'in_path_gtrends' : '/home/rohit/Desktop/crypto_tweet/data_project/',
-            'in_path_social': '/home/rohit/Desktop/crypto_tweet/data_project/',
-            'out_path' : '/home/rohit/Desktop/crypto_tweet/data_project/',
-            'path_time_pred' : '/home/rohit/Desktop/crypto_tweet/data_project/'}
-
-# initializing the class
-sample = BtcModelPrediction(dic_temp)
-sample.final_prediction()
