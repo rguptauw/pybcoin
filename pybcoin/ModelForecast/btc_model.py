@@ -57,6 +57,8 @@ class BtcModelPrediction(object):
         error_val = -1
         try:
             btc_data = pd.read_csv(self.in_path_btc + 'btc_prices.csv')
+            btc_data['Date'] = pd.to_datetime(btc_data['Date']
+                                              ).dt.strftime('%Y-%m-%d')
 
             # creating a current btc price for later use
             self.curr_price = btc_data['btc_price'].iloc[-1]
@@ -75,12 +77,11 @@ class BtcModelPrediction(object):
             # making the predictions
             future = m.make_future_dataframe(periods=1, include_history=False)
             future = m.predict(future)
-
             # creating the row to append to the time series dataset
             today_date = datetime.datetime.strptime(self.today_date,
                                                     '%Y-%m-%d')
             pred_date = today_date + datetime.timedelta(days=1)
-            pred_date = pred_date.strftime("%m/%d/%Y")
+            pred_date = pred_date.strftime("%Y-%m-%d")
 
             app_list = [pred_date]
             app_list.append(future['yhat'][0])
@@ -111,12 +112,22 @@ class BtcModelPrediction(object):
         error_val = -1
         try:
             oil_data = pd.read_csv(self.in_path_comm + 'oil_price.csv')
+            oil_data['Date'] = pd.to_datetime(oil_data['Date']
+                                              ).dt.strftime('%Y-%m-%d')
             google_data = pd.read_csv(self.in_path_gtrends + 'GTrendsData.csv')
+            google_data['Date'] = pd.to_datetime(google_data['Date']
+                                                 ).dt.strftime('%Y-%m-%d')
             btc_data = pd.read_csv(self.in_path_btc + 'btc_prices.csv')
+            btc_data['Date'] = pd.to_datetime(btc_data['Date']
+                                              ).dt.strftime('%Y-%m-%d')
             twitter_sentiment = pd.read_csv(self.in_path_social +
                                             'tweets_sentiment.csv')
+            twitter_sentiment['Date'] = pd.to_datetime(
+                twitter_sentiment['Date']).dt.strftime('%Y-%m-%d')
             reddit_sentiment = pd.read_csv(self.in_path_social +
                                            'reddit_comments_sentiment.csv')
+            reddit_sentiment['Date'] = pd.to_datetime(reddit_sentiment['Date']
+                                                      ).dt.strftime('%Y-%m-%d')
 
             # merging all the datasets
             df = pd.merge(btc_data, oil_data, on='Date')
@@ -221,6 +232,9 @@ class BtcModelPrediction(object):
         error_val = -1
         try:
             time_data = pd.read_csv(self.path_time_pred + 'predicted_time.csv')
+            time_data['Date'] = pd.to_datetime(time_data['Date']
+                                               ).dt.strftime('%Y-%m-%d')
+
             price_old = time_data['predicted_price_time'].iloc[-2]
             time_ratio = (self.time_prediction() - price_old) / price_old
             reg_ratio = self.linear_prediction()
@@ -233,12 +247,11 @@ class BtcModelPrediction(object):
             # confidence calculation
             ci = round((np.absolute(final_yhat[0]) / 0.05), 2)
             ci_f = ci if ci < 1 else 1
-
             # creating the row to append finally
             today_date = datetime.datetime.strptime(self.today_date,
                                                     '%Y-%m-%d')
             pred_date = today_date + datetime.timedelta(days=1)
-            pred_date = pred_date.strftime("%m/%d/%Y")
+            pred_date = pred_date.strftime("%Y-%m-%d")
 
             app_list = [pred_date]
             app_list.append(res)
@@ -248,9 +261,11 @@ class BtcModelPrediction(object):
             final_df = pd.read_csv(self.out_path + 'BitcoinPrice.csv')
             app_list = pd.DataFrame(app_list)
             app_list = app_list.transpose()
-            app_list.columns = ['date',	'move', 'confidence']
+            app_list.columns = ['date', 'move', 'confidence']
             final_df = final_df.append(app_list)
-            final_df.to_csv(self.out_path + 'BitcoinPrice_1.csv', index=False)
+            final_df.to_csv(self.out_path + 'BitcoinPrice.csv', index=False)
+
+            return final_yhat[0]
 
         except Exception as e:
             print(e)
