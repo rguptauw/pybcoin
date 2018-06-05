@@ -51,7 +51,7 @@ class ControllerCollector(object):
             # Collecting latest BTC price.
             collector = BtcDataCollector(self.config)
 
-            path = self.config['Forecast']['in_path_btc'] + 'btc_prices.csv'
+            path = self.config['Collector']['in_path_btc'] + 'btc_prices.csv'
             data = collector.fetch_btc_price()
             if isinstance(data, int):
                 print('Failure while collecting btc price')
@@ -62,7 +62,7 @@ class ControllerCollector(object):
 
             # Collecting BTC Tweet Count
 
-            path = self.config['Forecast']['in_path_btc'] + 'tweet_counts.csv'
+            path = self.config['Collector']['in_path_btc'] + 'tweet_counts.csv'
             data = collector.fetch_tweet_counts()
             if isinstance(data, int):
                 print('Failure while collecting  btc tweet counts')
@@ -73,7 +73,7 @@ class ControllerCollector(object):
 
             # Collecting BTC Volume
 
-            path = self.config['Forecast']['in_path_btc'] + 'btc_volume.csv'
+            path = self.config['Collector']['in_path_btc'] + 'btc_volume.csv'
             data = collector.fetch_transaction_volume()
             if isinstance(data, int):
                 print('Failure while collecting  btc trans. volume')
@@ -84,7 +84,7 @@ class ControllerCollector(object):
 
             # Collecting Google trends.
             collector = GTrendsDataCollector()
-            path = self.config['Forecast']['in_path_gtrends'
+            path = self.config['Collector']['in_path_gtrends'
                                            ] + 'GTrendsData.csv'
             data = collector.fetch_trends()
             if isinstance(data, int):
@@ -98,7 +98,7 @@ class ControllerCollector(object):
 
             collector = MarketDataCollector()
 
-            path = self.config['Forecast']['in_path_comm'] + 'usd_exchrate.csv'
+            path = self.config['Collector']['in_path_comm'] + 'usd_exchrate.csv'
             data = collector.fetch_usd_exrate()
             if isinstance(data, int):
                 print('Failure while collecting USD forex rate.')
@@ -109,7 +109,7 @@ class ControllerCollector(object):
 
             # Collecting NYSE composite index
 
-            path = self.config['Forecast']['in_path_comm'] + 'nyse_index.csv'
+            path = self.config['Collector']['in_path_comm'] + 'nyse_index.csv'
             data = collector.fetch_nyse_index()
             if isinstance(data, int):
                 print('Failure while collecting NYSE index.')
@@ -119,8 +119,7 @@ class ControllerCollector(object):
                 hist_data.to_csv(path)
 
             # Collecting Crude Oil Price
-            collector = MarketDataCollector()
-            path = self.config['Forecast']['in_path_comm'] + 'oil_price.csv'
+            path = self.config['Collector']['in_path_comm'] + 'oil_price.csv'
             data = collector.fetch_oil_price()
             if isinstance(data, int):
                 print('Failure while collecting Oil price.')
