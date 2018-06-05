@@ -8,7 +8,7 @@ PyBcoin is a Bitcoin trend forecasting tool which predicts the next days momentu
 
 The following is a screenshot of the app in this repo  [App](http://tejasjuw.pythonanywhere.com/):
 
-![Alt desc](https://github.com/rguptauw/pybcoin/blob/master/pybcoin/static/App.PNG)
+![Alt desc](https://github.com/rguptauw/pybcoin/blob/master/pybcoin/static/github_app.PNG)
 
 __Python Version 3.4 or Later__
 
