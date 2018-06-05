@@ -40,13 +40,13 @@ class MarketDataCollector(object):
         """
         error_val = -1
         try:
-            day_count = 5
+            day_count = 1
             today = datetime.now()
             start_date = today - timedelta(days=day_count)
             usd_eur_rate = pd.DataFrame([{
                 'Date': start_date.strftime("%Y-%m-%d"),
                 'forex_rate': CurrencyRates().get_rate('USD', 'EUR')}])
-            return usd_eur_rate.set_index('Date').tail(n=1)
+            return usd_eur_rate.set_index('Date')
         except Exception as e:
             # self.logger.error(e)
             print(e)
@@ -68,7 +68,9 @@ class MarketDataCollector(object):
 
             oil_price = quandl.get("OPEC/ORB",
                                    start_date=start_date.strftime("%Y-%m-%d"))
-            oil_price.rename(columns={'value': 'oil_price'})
+            oil_price = oil_price.rename(columns={'Value': 'oil_price'})
+            oil_price.index = pd.to_datetime(oil_price.index).date
+            oil_price.index.name = 'Date'
             return oil_price.tail(n=1)
         except Exception as e:
             # self.logger.error(e)
@@ -93,6 +95,7 @@ class MarketDataCollector(object):
             ]
             period = "5d"
             nyse_index = get_prices_data(params, period)
+            nyse_index.index.name = 'Date'
             return nyse_index.tail(n=1)
         except Exception as e:
             # self.logger.error(e)

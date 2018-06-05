@@ -29,7 +29,7 @@ config.set('Twitter', 'tweet-count-url', tweet_count_url)
 
 config.add_section('Reddit')
 config.set('Reddit', 'api-uri', api_uri)
-config.set('Reddit', 'json_path', './pybcoin/test/data/output.json')
+config.set('Reddit', 'json_path', './pybcoin/test/data/')
 
 config.add_section('Forecast')
 config.set('Forecast', 'in_path_btc', './pybcoin/test/data/btc/')

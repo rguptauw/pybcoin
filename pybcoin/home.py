@@ -17,7 +17,7 @@ app.css.append_css({
 })
 app.scripts.append_script({"external_url":"https://cdn.plot.ly/plotly-latest.min.js"})
 
-timeseries_df = pd.read_csv('BitcoinPrice.csv').dropna()
+timeseries_df = pd.read_csv('./data/BitcoinPrice.csv').dropna()
 timeseries_df['date'] = timeseries_df['date'].map(lambda x: datetime.datetime.strptime(x, '%m/%d/%Y'))
 timeseries_df = timeseries_df.sort_values(by='date').reset_index(drop=True)
 going_up = timeseries_df[timeseries_df['date']==max(timeseries_df['date'])].reset_index(drop=True).loc[0,'move']
@@ -215,6 +215,6 @@ def update_slider_rightval(t_dt):
     t_dt = datetime.datetime.strptime(t_dt,'%Y-%m-%d')
     right_val = t_dt.strftime("%b") + ' ' + p.ordinal(t_dt.day) + ', ' + str(t_dt.year)[2:]
     return right_val
-    
+
 if __name__ == '__main__':
     app.run_server(debug=True,port=8053)

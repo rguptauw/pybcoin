@@ -109,8 +109,9 @@ def create_word_cloud(text, date_generated):
     plt.figure(1, figsize=(13, 13))
     plt.imshow(wordcloud)
     plt.axis('off')
-    plt.savefig('date_' + date_generated[0].replace('/', '-') + '.png',
-                facecolor='k', bbox_inches='tight')
+    plt.savefig('./pybcoin/static/date_' +
+                date_generated[0].replace('/', '-') +
+                '.png', facecolor='k', bbox_inches='tight')
 
 
 def pre_process_data(path):

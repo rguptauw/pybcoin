@@ -35,12 +35,12 @@ class BtcModelPrediction(object):
     # constructor function
     def __init__(self, params):
 
-        self.in_path_btc = params['in_path_btc']
-        self.in_path_comm = params['in_path_comm']
-        self.in_path_gtrends = params['in_path_gtrends']
-        self.in_path_social = params['in_path_social']
-        self.path_time_pred = params['path_time_pred']
-        self.out_path = params['out_path']
+        self.in_path_btc = params['Forecast']['in_path_btc']
+        self.in_path_comm = params['Forecast']['in_path_comm']
+        self.in_path_gtrends = params['Forecast']['in_path_gtrends']
+        self.in_path_social = params['Forecast']['in_path_social']
+        self.path_time_pred = params['Forecast']['path_time_pred']
+        self.out_path = params['Forecast']['out_path']
 
     # function to create a time series prediction
     def time_prediction(self):
@@ -56,17 +56,17 @@ class BtcModelPrediction(object):
         """
         error_val = -1
         try:
-            btc_data = pd.read_csv(self.in_path_btc + 'btc_price.csv')
+            btc_data = pd.read_csv(self.in_path_btc + 'btc_prices.csv')
 
             # creating a current btc price for later use
             self.curr_price = btc_data['btc_price'].iloc[-1]
 
             # today's date for further use
-            self.today_date = btc_data['utc_time'].iloc[-1]
+            self.today_date = btc_data['Date'].iloc[-1]
 
             # training from fbprophet
             # prophet module requires columns ds (date) and y (value)
-            candles = btc_data.rename(columns={'utc_time': 'ds',
+            candles = btc_data.rename(columns={'Date': 'ds',
                                       'btc_price': 'y'})
             m = Prophet(yearly_seasonality=True, daily_seasonality=False,
                         changepoint_prior_scale=0.001)
@@ -111,29 +111,22 @@ class BtcModelPrediction(object):
         error_val = -1
         try:
             oil_data = pd.read_csv(self.in_path_comm + 'oil_price.csv')
-            google_data = pd.read_csv(self.in_path_gtrends + 'gtrends.csv')
-            btc_data = pd.read_csv(self.in_path_btc + 'btc_price.csv')
+            google_data = pd.read_csv(self.in_path_gtrends + 'GTrendsData.csv')
+            btc_data = pd.read_csv(self.in_path_btc + 'btc_prices.csv')
             twitter_sentiment = pd.read_csv(self.in_path_social +
-                                            'twitter_sentiment.csv')
+                                            'tweets_sentiment.csv')
             reddit_sentiment = pd.read_csv(self.in_path_social +
-                                           'reddit_sentiment.csv')
+                                           'reddit_comments_sentiment.csv')
 
             # merging all the datasets
-            df = pd.merge(btc_data, oil_data,
-                          left_on='utc_time', right_on='dates_s')
-            del df['dates_s']
-            df = pd.merge(df, google_data, left_on='utc_time', right_on='date')
-            del df['date']
-            df = pd.merge(df, twitter_sentiment,
-                          left_on='utc_time', right_on='Date')
-            del df['Date']
+            df = pd.merge(btc_data, oil_data, on='Date')
+            df = pd.merge(df, google_data, on='Date')
+            df = pd.merge(df, twitter_sentiment, on='Date')
 
             # renaming columns name for twitter
             df = df.rename(columns={'Negative': 'twitter_negative'})
             df = df.rename(columns={'Positive': 'twitter_positive'})
-            df = pd.merge(df, reddit_sentiment,
-                          left_on='utc_time', right_on='Date')
-            del df['Date']
+            df = pd.merge(df, reddit_sentiment, on='Date')
 
             # renaming columns name for reddit
             df = df.rename(columns={'Negative': 'reddit_negative'})
@@ -148,7 +141,7 @@ class BtcModelPrediction(object):
                             df['reddit_negative']))
 
             # selecting only relevant columns
-            df = df[['utc_time', 'oil_price', 'google_hits', 'twitter',
+            df = df[['Date', 'oil_price', 'google_hits', 'twitter',
                     'reddit', 'btc_price']]
 
             # initializing the columns of price deltas
@@ -182,7 +175,7 @@ class BtcModelPrediction(object):
                 df['btc_delta_pred'].iloc[i] = df['btc_delta'].iloc[i + 1]
 
             # selecting only relevant columns
-            df = df[['utc_time', 'oil_delta', 'google_delta', 'twitter_delta',
+            df = df[['Date', 'oil_delta', 'google_delta', 'twitter_delta',
                      'reddit_delta', 'btc_price', 'btc_delta',
                      'btc_delta_pred']]
 
@@ -252,9 +245,12 @@ class BtcModelPrediction(object):
             app_list.append(ci_f)
 
             # writing to the file
-            with open(self.out_path + 'BitcoinPrice.csv', 'a') as f:
-                writer = csv.writer(f)
-                writer.writerow(app_list)
+            final_df = pd.read_csv(self.out_path + 'BitcoinPrice.csv')
+            app_list = pd.DataFrame(app_list)
+            app_list = app_list.transpose()
+            app_list.columns = ['date',	'move', 'confidence']
+            final_df = final_df.append(app_list)
+            final_df.to_csv(self.out_path + 'BitcoinPrice_1.csv', index=False)
 
         except Exception as e:
             print(e)

@@ -19,7 +19,8 @@ class SentimenetAnalyzerTest(TestCase):
         self.config.read('./pybcoin/config/config_test.ini')
         self.collector = SentimentAnalyzer(self.config)
         self.text = ['neo', 'bitcoin', 'bitcoin', 'fork']
-        self.date = ['22/05/2018']
+        self.date = ['22/05/2016']
+        self.path = './pybcoin/test/data/'
 
     """
     Test function for text sentiments.
@@ -36,6 +37,7 @@ class SentimenetAnalyzerTest(TestCase):
                                      'tweets_sentiment.csv')
         flag = test_sentiment.empty
         self.assertEqual(flag, False)
+        os.remove('./pybcoin/static/date_22-05-2016.png')
 
     def test_sentiment_column_names(self):
 
@@ -46,7 +48,8 @@ class SentimenetAnalyzerTest(TestCase):
         test_col_names = pd.read_csv(self.collector.path +
                                      'tweets_sentiment.csv').columns
         self.assertEqual(sorted(test_col_names),
-                         ['Date', 'neg_count', 'pos_count'])
+                         ['Date', 'Negative', 'Positive'])
+        os.remove('./pybcoin/static/date_22-05-2016.png')
 
     def test_sentiment_wordcloud(self):
 
@@ -54,5 +57,6 @@ class SentimenetAnalyzerTest(TestCase):
         Checks that wordcloud is generated.
         """
         create_word_cloud(self.text, self.date)
-        self.assertEqual(os.path.isfile('./pybcoin/test/data/' +
-                                        'date_22-05-2018.png'), False)
+        self.assertEqual(os.path.isfile('./pybcoin/static/' +
+                                        'date_22-05-2016.png'), True)
+        os.remove('./pybcoin/static/date_22-05-2016.png')
