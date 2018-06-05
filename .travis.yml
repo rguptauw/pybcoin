@@ -27,6 +27,7 @@ install:
   - python -c "import nltk; nltk.download('stopwords')"
   - pip install flake8
   - pip install nose
+  - pip install scipy
 # command to run tests
 script:
   - nosetests --exe
