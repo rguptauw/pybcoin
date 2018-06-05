@@ -72,7 +72,7 @@ if __name__ == "__main__":
         print('Predicting the next 24hr movement...')
         start_forecast(config)
 
-        p = subprocess.Popen(['python', './pybcoin/home.py'], shell=True)
+        p = subprocess.Popen('python pybcoin/home.py', shell=True)
         time.sleep(86400)
         kill(p.pid)
         time.sleep(10)
