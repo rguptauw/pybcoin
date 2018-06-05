@@ -3,22 +3,25 @@
     Description: Script to trigger the data flow and start the ui server.
 """
 
-from pybcoin.DataCollector.controller_collector import ControllerCollector
-from pybcoin.SentimentAnalyzer.sentiment_scorer import SentimentAnalyzer
-from pybcoin.ModelForecast.btc_model import BtcModelPrediction
-
-import sys
-import psutil
 import os
+import sys
+
+__directory = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(__directory + "/..")
+sys.path.append(__directory + "/../..")
+
+from pybcoin.DataCollector.controller_collector import ControllerCollector # noqa
+from pybcoin.SentimentAnalyzer.sentiment_scorer import SentimentAnalyzer # noqa
+from pybcoin.ModelForecast.btc_model import BtcModelPrediction # noqa
+
+import psutil
 import time
 import subprocess
 
 
 from configparser import SafeConfigParser
 
-__directory = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(__directory + "/..")
-sys.path.append(__directory + "/../..")
+
 
 
 def start_data_collection(config):
@@ -64,7 +67,7 @@ if __name__ == "__main__":
 
     while True:
         print('Collecting data...')
-        start_data_collection(config_file)
+        # start_data_collection(config_file)
 
         print('Starting sentiment analyzer...')
         start_sentiment_analyzer(config)

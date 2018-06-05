@@ -1,0 +1,9 @@
+setup.cfg
+setup.py
+recursive-include pybcoin *
+recursive-include data *
+include pybcoin/*
+include doc/*
+include examples/*
+include paper/*
+include requirements.txt
