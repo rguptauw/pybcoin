@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module btc_data_collector</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>btc_data_collector</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:c%3A%5Cusers%5Cvivan%5Cdesktop%5Ccl%5Cseds%5Cpybcoin%5Cpybcoin%5Cdatacollector%5Cbtc_data_collector.py">c:\users\vivan\desktop\cl\seds\pybcoin\pybcoin\datacollector\btc_data_collector.py</a></font></td></tr></table>
+    <p><tt>Module&nbsp;name:&nbsp;btc_data_collector<br>
+Description:&nbsp;Module&nbsp;for&nbsp;collecting&nbsp;day&nbsp;level&nbsp;Bitcoin&nbsp;specific&nbsp;data<br>
+like,&nbsp;price,&nbsp;number&nbsp;of&nbsp;tweets,&nbsp;volume&nbsp;of&nbsp;buy&nbsp;and&nbsp;sell&nbsp;transactions.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="logging.html">logging</a><br>
+</td><td width="25%" valign=top><a href="pandas.html">pandas</a><br>
+</td><td width="25%" valign=top><a href="quandl.html">quandl</a><br>
+</td><td width="25%" valign=top><a href="requests.html">requests</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="btc_data_collector.html#BtcDataCollector">BtcDataCollector</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="BtcDataCollector">class <strong>BtcDataCollector</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>The&nbsp;<a href="builtins.html#object">object</a>&nbsp;for&nbsp;retrieving&nbsp;daily&nbsp;data&nbsp;for&nbsp;bitcoin&nbsp;specific<br>
+factors.The&nbsp;prices&nbsp;are&nbsp;retreived&nbsp;once&nbsp;a&nbsp;day&nbsp;at&nbsp;a&nbsp;predefined<br>
+time.&nbsp;If&nbsp;the&nbsp;current&nbsp;for&nbsp;the&nbsp;current&nbsp;day&nbsp;is&nbsp;not&nbsp;available,<br>
+latest&nbsp;available&nbsp;data&nbsp;is&nbsp;used.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;:member&nbsp;attributes:&nbsp;logger:&nbsp;logger&nbsp;instance<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;api_key:&nbsp;Quandl&nbsp;API&nbsp;key<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tweet_count_url:&nbsp;Url&nbsp;to&nbsp;retrieve<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tweets&nbsp;count<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;:member&nbsp;functions:&nbsp;&nbsp;fetch_btc_price<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fetch_tweet_counts<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fetch_transaction_volume<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="BtcDataCollector-__init__"><strong>__init__</strong></a>(self, params)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="BtcDataCollector-fetch_btc_price"><strong>fetch_btc_price</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;fetch&nbsp;the&nbsp;current&nbsp;bitcoin&nbsp;price.<br>
+The&nbsp;price&nbsp;is&nbsp;in&nbsp;USD&nbsp;and&nbsp;is&nbsp;retreived&nbsp;from<br>
+the&nbsp;CoinDesk&nbsp;index.<br>
+:&nbsp;param&nbsp;self<br>
+:&nbsp;return&nbsp;btc_price(float)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;error_val(int)</tt></dd></dl>
+
+<dl><dt><a name="BtcDataCollector-fetch_transaction_volume"><strong>fetch_transaction_volume</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;fetch&nbsp;the&nbsp;daily&nbsp;bitcoin&nbsp;transaction<br>
+volume&nbsp;in&nbsp;USD.<br>
+:&nbsp;param&nbsp;self<br>
+:&nbsp;return&nbsp;nyse_index(pandas&nbsp;Dataframe)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;error_val(int)</tt></dd></dl>
+
+<dl><dt><a name="BtcDataCollector-fetch_tweet_counts"><strong>fetch_tweet_counts</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;fetch&nbsp;the&nbsp;daily&nbsp;estimated&nbsp;number&nbsp;of&nbsp;tweets<br>
+with&nbsp;bitcoin&nbsp;related&nbsp;hastags.&nbsp;The&nbsp;function&nbsp;parses&nbsp;the<br>
+HTML&nbsp;page&nbsp;to&nbsp;retrieve&nbsp;the&nbsp;tweet&nbsp;counts.<br>
+&nbsp;<br>
+:&nbsp;param&nbsp;self<br>
+:&nbsp;return&nbsp;tweet_count(pandas&nbsp;Dataframes)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;error_val(int)</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table>
+</body></html>

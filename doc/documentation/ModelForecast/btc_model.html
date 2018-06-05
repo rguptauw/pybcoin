@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module btc_model</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>btc_model</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:c%3A%5Cusers%5Cvivan%5Cdesktop%5Ccl%5Cseds%5Cpybcoin%5Cpybcoin%5Cmodelforecast%5Cbtc_model.py">c:\users\vivan\desktop\cl\seds\pybcoin\pybcoin\modelforecast\btc_model.py</a></font></td></tr></table>
+    <p><tt>Module&nbsp;name:&nbsp;btc_model<br>
+Description:&nbsp;Module&nbsp;for&nbsp;predicting&nbsp;bitcoin&nbsp;price&nbsp;direction&nbsp;based&nbsp;on<br>
+external&nbsp;regressors&nbsp;and&nbsp;time&nbsp;series.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="csv.html">csv</a><br>
+</td><td width="25%" valign=top><a href="datetime.html">datetime</a><br>
+</td><td width="25%" valign=top><a href="numpy.html">numpy</a><br>
+</td><td width="25%" valign=top><a href="pandas.html">pandas</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="btc_model.html#BtcModelPrediction">BtcModelPrediction</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="BtcModelPrediction">class <strong>BtcModelPrediction</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Class&nbsp;<a href="builtins.html#object">object</a>&nbsp;for&nbsp;predicting&nbsp;bitcoin&nbsp;prices&nbsp;from&nbsp;2&nbsp;techniques:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;1.&nbsp;Time&nbsp;Series&nbsp;prediction<br>
+&nbsp;&nbsp;&nbsp;&nbsp;2.&nbsp;Linear&nbsp;Regression<br>
+The&nbsp;prediction&nbsp;is&nbsp;done&nbsp;taking&nbsp;into&nbsp;account&nbsp;all&nbsp;the&nbsp;historical&nbsp;data.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;:member&nbsp;attributes:&nbsp;in_path_btc:&nbsp;input&nbsp;path&nbsp;for&nbsp;BTC&nbsp;prices<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in_path_comm:&nbsp;input&nbsp;path&nbsp;for&nbsp;commodity&nbsp;prices<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in_path_gtrends:&nbsp;input&nbsp;path&nbsp;for&nbsp;Google&nbsp;search<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;trends<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;out_path:&nbsp;output&nbsp;path&nbsp;for&nbsp;writing&nbsp;to&nbsp;a&nbsp;csv&nbsp;file<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="BtcModelPrediction-__init__"><strong>__init__</strong></a>(self, params)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="BtcModelPrediction-final_prediction"><strong>final_prediction</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;create&nbsp;a&nbsp;composite&nbsp;prediction&nbsp;by&nbsp;taking&nbsp;inputs&nbsp;from<br>
+both&nbsp;time-series&nbsp;and&nbsp;linear&nbsp;regression&nbsp;model.<br>
+Writes&nbsp;a&nbsp;row&nbsp;to&nbsp;the&nbsp;csv&nbsp;that&nbsp;is&nbsp;read&nbsp;by&nbsp;the&nbsp;UI&nbsp;component.<br>
+:&nbsp;param&nbsp;self<br>
+:&nbsp;return&nbsp;error_val(int)</tt></dd></dl>
+
+<dl><dt><a name="BtcModelPrediction-linear_prediction"><strong>linear_prediction</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;predict&nbsp;BTC&nbsp;price&nbsp;for&nbsp;next&nbsp;day&nbsp;on&nbsp;external&nbsp;regressors:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;1.&nbsp;Oil&nbsp;Price<br>
+&nbsp;&nbsp;&nbsp;&nbsp;2.&nbsp;Google&nbsp;trends<br>
+Uses&nbsp;scikit&nbsp;learn&nbsp;library&nbsp;to&nbsp;run&nbsp;linear&nbsp;regression.<br>
+:&nbsp;param&nbsp;self<br>
+:&nbsp;return&nbsp;pred_reg(float)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;error_val(int)</tt></dd></dl>
+
+<dl><dt><a name="BtcModelPrediction-time_prediction"><strong>time_prediction</strong></a>(self)</dt><dd><tt>Method&nbsp;to&nbsp;predict&nbsp;the&nbsp;BTC&nbsp;price&nbsp;for&nbsp;one&nbsp;day&nbsp;based&nbsp;on&nbsp;historical<br>
+prices.&nbsp;Uses&nbsp;a&nbsp;library&nbsp;'prophet'&nbsp;made&nbsp;open-source&nbsp;by&nbsp;Facebook.<br>
+The&nbsp;library&nbsp;gives&nbsp;a&nbsp;confidence&nbsp;interval,&nbsp;and&nbsp;seperately&nbsp;provides<br>
+trend&nbsp;and&nbsp;seasonality.<br>
+:&nbsp;param&nbsp;self<br>
+:return&nbsp;future['yhat'](float)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;error_val(int)</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table>
+</body></html>
