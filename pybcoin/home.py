@@ -53,19 +53,19 @@ def update_global_vars(fr_dt,t_dt):
 app.layout = html.Div(children=[ #Main Container
     html.Link(href='/static/mycss.css', rel='stylesheet'),
     html.Div(id="my-header",children=[ #Header
-        html.Label('KEEP CALM AND HODL??',style={'font-face':'monospace','font-size':'48px','color':'white','font-style':'italic'})
-    ],style={'padding-left':'150px','padding-top':'10px'}), # Header
+        html.Label('KEEP CALM AND HODL',style={'font-face':'monospace','font-size':'48px','color':'white','font-style':'bold'})
+    ],style={'padding-left':'500px','padding-top':'10px'}), # Header
 
     html.Div(children=[ #Two column container
-        
+
         html.Div(children=[ #w3-cell-row 1 ### ROW 1 ####
-        
+
             html.Div(children=[ #column 1 ### SECTION 1 ####
                 html.Div(children=[
-                    html.Div('Tomorrow\'s Prediction',className=color_style_class,style={'margin-right':'20px','margin-top':'60px','font-size':'24px','float':'left'}),
-                    html.Img(src=img_src,style={'margin-left':'10px','width':'100px','height':'150px','margin-bottom':'20px','float':'left'}),
+                    html.Div('Tomorrow\'s Prediction',className=color_style_class,style={'margin-right':'140px','margin-top':'60px','font-size':'24px','float':'left'}),
+                    html.Img(src=img_src,style={'margin-left':'70px','width':'100px','height':'150px','margin-bottom':'20px','float':'left'}),
                     html.Div(children=[
-                            html.Label(str(confidence)+'%'+' Confidence',className=color_style_class,style={'margin-left':'20px','font-size':'24px'})
+                            html.Label(str(confidence)+'%'+' Confidence',className=color_style_class,style={'margin-left':'240px','font-size':'24px'})
                     ],style={'padding-top':'60px'}),
                 ],className='',style={'margin-left':'17%'})
             ],className='w3-cell',style={}), # column 1 ENDS
@@ -73,7 +73,7 @@ app.layout = html.Div(children=[ #Main Container
         ],className='w3-cell-row w3-margin'), #w3-cell-row 1 ENDS
 
         html.Div(children=[ #w3-cell-row 2 ### ROW 2 ####
-        
+
             html.Div(children=[ #column 1 ### SECTION 3 ####
                 html.Div(children=[
                         html.Label(children='Social Media Buzz on ',className=color_style_class),
@@ -97,16 +97,16 @@ app.layout = html.Div(children=[ #Main Container
                     ],style={'width':'50%','text-align':'right','position':'absolute'}),
                 ]),
                 html.A(html.Img(id='my-wordcloud',src='static/wordcloud.png',\
-                                style={'margin-left':'35px','width':'470px','height':'340px','background-color':'white'}),\
+                                style={'margin-left':'85px','width':'550px','height':'400px','background-color':'white'}),\
                                 href='#',title='Click for Details')
             ],className='w3-cell w3-half'), # column 1 ENDS
-    
+
             html.Div(children=[ #column 2 ### SECTION 4 ####
                 #html.Div('Accuracy',className=color_style_class+' w3-panel w3-padding w3-margin',style={'text-shadow':'1px 1px 0 #444;','font-weight':'bold'}),
-            
+
                 html.Div(children=[
                     html.Div([
-                        html.Div('Past Performance',className=color_style_class+' w3-panel w3-padding w3-margin',style={'text-shadow':'1px 1px 0 #444;','font-weight':'bold'}),
+                        html.Div('Past Performance',className=color_style_class+' w3-panel w3-padding w3-margin',style={'float':'left','padding-right':'100px','text-shadow':'1px 1px 0 #444;','font-weight':'bold'}),
                         html.Div(children=[
                             html.Div(children=[
                                     dcc.DatePickerRange(
@@ -121,17 +121,17 @@ app.layout = html.Div(children=[ #Main Container
                                         min_date_allowed='2016-01-01',
                                     )
                             ],style={'width':'100%'}),
-                        ],style={'margin-left':'35px'})
+                        ],style={'margin-left':'500px'})
                     ],style={})
                     #dcc.Input(id='my-tmp',value='', type='text')
                 ],className=''),
-            
+
                 html.Div(children=[
                     dcc.Graph( #Graph
                         id='my-timeseries',
                         config={'displayModeBar': False}
                     ) #Graph
-                ],style={'margin-left':'35px'},className='')
+                ],style={'margin-left':'200px','width':'470px','height':'540px', 'margin-top' : '30px'},className='')
             ],className='w3-cell w3-half'), # column 2 ENDS
 
         ],className='w3-cell-row') #we-cell-row 2 ENDS
@@ -140,8 +140,8 @@ app.layout = html.Div(children=[ #Main Container
     html.Br(),
     html.Br()
 ])#Main Container
-                    
-                    
+
+
 @app.callback(
         dash.dependencies.Output('my-slider-parent', 'children'),
         [dash.dependencies.Input('my-datepicker', 'start_date'),
@@ -167,27 +167,44 @@ def update_timeseries(fr_dt,t_dt):
     from_dt = datetime.datetime.strptime(fr_dt,'%Y-%m-%d')
     to_dt = datetime.datetime.strptime(t_dt,'%Y-%m-%d')
     filter_df = timeseries_df[(timeseries_df['date']>=from_dt) & (timeseries_df['date']<=to_dt)]
+    grouped_data = filter_df.groupby(['move']).agg('count')
+    grouped_data.columns = ['Trend','count_val']
+    print(grouped_data)
     return {
-            'data': [go.Scatter(
-                    x=filter_df['date'],
-                    y=filter_df['move'],
-                    mode='lines+markers',
-                    line={'width': 4.0, 'color': 'orange'},
-                    marker={'size':6,'color':'black'}
+            'data': [go.Bar(
+                    x=grouped_data.index.astype('category'),
+                    y=grouped_data['count_val'],
+                    marker=dict(
+                        color=['rgba(205,92,92,1)', 'rgba(50,205,50,1)']),
             )],
             'layout':go.Layout(
-                    margin={'l': 60, 'b': 30, 't': 20, 'r': 50},
-                    height=340,width=470,
-                    yaxis={'tickvals' : [0,1],'ticktext' : ['Miss','Hit']}
+                    margin={'l': 80, 'b': 30, 't': 20, 'r': 20},
+                    height=440,width=470,
+                    xaxis={'tickvals' : [0,1],'ticktext' : ['Miss','Hit']}
                 )
     }
+
+    # return {
+    #         'data': [go.Scatter(
+    #                 x=filter_df['date'],
+    #                 y=filter_df['move'],
+    #                 mode='lines+markers',
+    #                 line={'width': 4.0, 'color': 'orange'},
+    #                 marker={'size':6,'color':'black'}
+    #         )],
+    #         'layout':go.Layout(
+    #                 margin={'l': 60, 'b': 30, 't': 20, 'r': 50},
+    #                 height=340,width=470,
+    #                 yaxis={'tickvals' : [0,1],'ticktext' : ['Miss','Hit']}
+    #             )
+    # }
 
 @app.callback(
     dash.dependencies.Output('my-wordcloud', 'src'),
     [dash.dependencies.Input('my-dtslider', 'value')])
 def update_wordcloud(dt):
     pos = str(dt)
-    fname = 'static/wc' + marks_vals[pos][5:7] + marks_vals[pos][8:10] + marks_vals[pos][:4] + '.png'
+    fname = 'static/date_' + marks_vals[pos][:4] + "-" + marks_vals[pos][5:7] + "-" + marks_vals[pos][8:10] + '.png'
     return fname
 
 @app.callback(
