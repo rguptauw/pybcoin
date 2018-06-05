@@ -22,32 +22,31 @@ class ControllerCollectorTest(TestCase):
                                              'config_test.ini')
         self.response_dict = {
             'btc': pd.DataFrame([{'Date': '10/1/2017',
-                                  'btc_price': 4394.6388}],
-                                index=['Date']),
+                                  'btc_price': 4394.6388}]
+                                ).set_index('Date'),
             'count': pd.DataFrame([{'Date': '10/1/2017',
-                                    'tweet_count': 56280}],
-                                  index=['Date']),
+                                    'tweet_count': 56280}]
+                                  ).set_index('Date'),
             'vol': pd.DataFrame([{'Date': '10/1/2017',
-                                  'Value': 663214577.9}],
-                                index=['Date']),
+                                  'Value': 663214577.9}]
+                                ).set_index('Date'),
             'gtrend': pd.DataFrame([{'Date': '10/1/2017',
-                                     'btc': 81}],
-                                   index=['Date']),
+                                     'btc': 81}]
+                                   ).set_index('Date'),
             'forex': pd.DataFrame([{'Date': '10/1/2017',
-                                    'forex_rate': 0.852369587}],
-                                  index=['Date']),
+                                    'forex_rate': 0.852369587}]
+                                  ).set_index('Date'),
             'nyse': pd.DataFrame([{'Date': '10/1/2017',
-                                   'NYA_Close': 12264.6649}],
-                                 index=['Date']),
+                                   'NYA_Close': 12264.6649}]
+                                 ).set_index('Date'),
             'oil': pd.DataFrame([{'Date': '10/1/2017',
-                                  'oil_price': 54.6}],
-                                index=['Date']),
+                                  'oil_price': 54.6}]
+                                ).set_index('Date'),
             'tweets': pd.DataFrame([{'Date': '10/1/2017',
                                      'text': 'Bitcoin, shooting to the moon'}]
                                    ),
             'reddit': pd.DataFrame([{'Date': '10/1/2017',
-                                     'text': 'Bitcoin make me rich.'}]
-                                   )
+                                     'text': 'Bitcoin make me rich.'}])
         }
 
     """
@@ -73,15 +72,15 @@ class ControllerCollectorTest(TestCase):
     @patch.object(RedditDataCollector, 'fetch_reddit_comments',
                   autospec=True)
     def test_data_collection_pipeline(self,
-                                      mock_fetch_btc_price,
-                                      mock_fetch_tweet_counts,
-                                      mock_fetch_transaction_volume,
-                                      mock_fetch_trends,
-                                      mock_fetch_usd_exrate,
-                                      mock_fetch_nyse_index,
-                                      mock_fetch_oil_price,
+                                      mock_fetch_reddit_comments,
                                       mock_fetch_tweets,
-                                      mock_fetch_reddit_comments
+                                      mock_fetch_oil_price,
+                                      mock_fetch_nyse_index,
+                                      mock_fetch_usd_exrate,
+                                      mock_fetch_trends,
+                                      mock_fetch_transaction_volume,
+                                      mock_fetch_tweet_counts,
+                                      mock_fetch_btc_price,
                                       ):
         mock_fetch_btc_price.return_value = self.response_dict['btc']
         mock_fetch_tweet_counts.return_value = self.response_dict['count']
