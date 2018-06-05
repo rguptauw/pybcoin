@@ -27,7 +27,7 @@ class RedditDataCollector(object):
     def __init__(self, config):
         self.logger = logging.getLogger('simpleExample')
         self.api_uri = config['Reddit']['api-uri']
-        self.output_path = config['Reddit']['json_path']
+        self.output_path = config['Reddit']['data_path']
 
     def fetch_reddit_comments(self):
         """
@@ -41,8 +41,9 @@ class RedditDataCollector(object):
         error_val = -1
         try:
             day_count = 1
-            today = datetime.now()
-            for single_date in (today + timedelta(n)
+            today = datetime.now().replace(hour=0, minute=0,
+                                           second=0, microsecond=0)
+            for single_date in (today - timedelta(n)
                                 for n in range(day_count)):
                 # self.logger.error('Fetching Reddit comments for:'
                 #                   , single_date)
@@ -62,11 +63,12 @@ class RedditDataCollector(object):
                                     'text': comment['body'],
                                     'Date': comment['created_utc']
                                     })
-                with open(self.output_path,
+                with open(self.output_path + 'output.json',
                           'w+', encoding='utf-8') as f:
                     json.dump(comments, f)
-            reddit_comments = pd.read_json(self.output_path,
+            reddit_comments = pd.read_json(self.output_path + 'output.json',
                                            orient='records')
+            reddit_comments['Date'] = (today - timedelta(1)).date()
             return reddit_comments
         except Exception as e:
             # self.logger.error(e)

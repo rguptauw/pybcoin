@@ -46,8 +46,9 @@ class BtcDataCollector(object):
         """
         error_val = -1
         try:
+            day_count = 1
             today = datetime.now()
-            start_date = today - timedelta(days=1)
+            start_date = today - timedelta(days=day_count)
             btc_price = pd.DataFrame([{
                 'Date': start_date.strftime("%Y-%m-%d"),
                 'btc_price': BtcConverter(
@@ -103,13 +104,15 @@ class BtcDataCollector(object):
         """
         error_val = -1
         try:
-            day_count = 1
+            day_count = 5
             today = datetime.now()
             start_date = today - timedelta(days=day_count)
             volume = quandl.get("BCHAIN/ETRVU",
                                 start_date=start_date.strftime("%Y-%m-%d"),
                                 api_key=self.api_key)
-            return volume
+            volume.index = pd.to_datetime(volume.index).date
+            volume.index.name = 'Date'
+            return volume.tail(n=1)
         except Exception as e:
             # self.logger.error(e)
             print(e)

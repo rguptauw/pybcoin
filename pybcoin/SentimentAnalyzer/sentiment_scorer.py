@@ -34,8 +34,8 @@ class SentimentAnalyzer(object):
         pos_count = np.sum(grouped_Data['Sentiment'] > 0)
         neg_count = np.sum(grouped_Data['Sentiment'] < 0)
         grouped_sentiment = pd.DataFrame({
-            'pos_count': [pos_count],
-            'neg_count': [neg_count]
+            'Positive': [pos_count],
+            'Negative': [neg_count]
         })
         return grouped_sentiment
 
@@ -61,4 +61,6 @@ class SentimentAnalyzer(object):
 
         text_df = text_df.groupby(['Date']).apply(
             self.__sentiment_count__).reset_index().drop(['level_1'], axis=1)
-        text_df.to_csv(self.path + keyword + '_sentiment.csv', index=False)
+        hist_sent = pd.read_csv(self.path + keyword + '_sentiment.csv')
+        hist_sent = hist_sent.append(text_df)
+        hist_sent.to_csv(self.path + keyword + '_sentiment.csv', index=False)

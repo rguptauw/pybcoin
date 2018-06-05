@@ -49,6 +49,8 @@ class GTrendsDataCollector(object):
                                        geo='', gprop='')
                 df_final = pd.concat([df_final,
                                      pytrends.interest_over_time()], axis=1)
+            df_final.index = pd.to_datetime(df_final.index).date
+            df_final.index.name = 'Date'
             return df_final[kw_lists].tail(n=1)
         except Exception as e:
             # self.logger.error(e)
