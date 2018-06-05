@@ -73,6 +73,6 @@ if __name__ == "__main__":
         start_forecast(config)
 
         p = subprocess.Popen(['python', './pybcoin/home.py'], shell=True)
-        time.sleep(60)
+        time.sleep(86400)
         kill(p.pid)
         time.sleep(10)
