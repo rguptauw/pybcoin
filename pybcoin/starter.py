@@ -6,22 +6,18 @@
 import os
 import sys
 
+import psutil
+import time
+import subprocess
+from configparser import SafeConfigParser
+
 __directory = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(__directory + "/..")
 sys.path.append(__directory + "/../..")
 
-from pybcoin.DataCollector.controller_collector import ControllerCollector # noqa
-from pybcoin.SentimentAnalyzer.sentiment_scorer import SentimentAnalyzer # noqa
-from pybcoin.ModelForecast.btc_model import BtcModelPrediction # noqa
-
-import psutil
-import time
-import subprocess
-
-
-from configparser import SafeConfigParser
-
-
+from pybcoin.DataCollector.controller_collector import ControllerCollector  # noqa
+from pybcoin.SentimentAnalyzer.sentiment_scorer import SentimentAnalyzer  # noqa
+from pybcoin.ModelForecast.btc_model import BtcModelPrediction  # noqa
 
 
 def start_data_collection(config):
