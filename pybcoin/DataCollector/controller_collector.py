@@ -85,7 +85,7 @@ class ControllerCollector(object):
             # Collecting Google trends.
             collector = GTrendsDataCollector()
             path = self.config['Collector']['in_path_gtrends'
-                                           ] + 'GTrendsData.csv'
+                                            ] + 'GTrendsData.csv'
             data = collector.fetch_trends()
             if isinstance(data, int):
                 print('Failure while collecting Google trends.')
@@ -98,7 +98,8 @@ class ControllerCollector(object):
 
             collector = MarketDataCollector()
 
-            path = self.config['Collector']['in_path_comm'] + 'usd_exchrate.csv'
+            path = self.config['Collector']['in_path_comm'
+                                            ] + 'usd_exchrate.csv'
             data = collector.fetch_usd_exrate()
             if isinstance(data, int):
                 print('Failure while collecting USD forex rate.')
