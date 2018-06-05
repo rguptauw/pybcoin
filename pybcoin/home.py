@@ -169,7 +169,6 @@ def update_timeseries(fr_dt,t_dt):
     filter_df = timeseries_df[(timeseries_df['date']>=from_dt) & (timeseries_df['date']<=to_dt)]
     grouped_data = filter_df.groupby(['move']).agg('count')
     grouped_data.columns = ['Trend','count_val']
-    print(grouped_data)
     return {
             'data': [go.Bar(
                     x=grouped_data.index.astype('str'),

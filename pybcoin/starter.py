@@ -63,7 +63,7 @@ if __name__ == "__main__":
 
     while True:
         print('Collecting data...')
-        # start_data_collection(config_file)
+        start_data_collection(config_file)
 
         print('Starting sentiment analyzer...')
         start_sentiment_analyzer(config)
