@@ -18,7 +18,7 @@ app.css.append_css({
 app.scripts.append_script({"external_url":"https://cdn.plot.ly/plotly-latest.min.js"})
 
 timeseries_df = pd.read_csv('./data/BitcoinPrice.csv').dropna()
-timeseries_df['date'] = timeseries_df['date'].map(lambda x: datetime.datetime.strptime(x, '%m/%d/%Y'))
+timeseries_df['date'] = pd.to_datetime(timeseries_df['date'])
 timeseries_df = timeseries_df.sort_values(by='date').reset_index(drop=True)
 going_up = timeseries_df[timeseries_df['date']==max(timeseries_df['date'])].reset_index(drop=True).loc[0,'move']
 confidence = int(round(timeseries_df[timeseries_df['date']==max(timeseries_df['date'])].reset_index(drop=True).loc[0,'confidence']*100))
@@ -169,10 +169,9 @@ def update_timeseries(fr_dt,t_dt):
     filter_df = timeseries_df[(timeseries_df['date']>=from_dt) & (timeseries_df['date']<=to_dt)]
     grouped_data = filter_df.groupby(['move']).agg('count')
     grouped_data.columns = ['Trend','count_val']
-    print(grouped_data)
     return {
             'data': [go.Bar(
-                    x=grouped_data.index.astype('category'),
+                    x=grouped_data.index.astype('str'),
                     y=grouped_data['count_val'],
                     marker=dict(
                         color=['rgba(205,92,92,1)', 'rgba(50,205,50,1)']),
