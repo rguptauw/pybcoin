@@ -24,6 +24,7 @@ class SentimentAnalyzer(object):
         self.logger = logging.getLogger('simpleExample')
         self.analyzer = SentimentIntensityAnalyzer()
         self.path = config['Sentiment']['text_csv_path']
+        self.write_format = '_sentiment.csv'
 
     def __sentiment_count__(self, grouped_Data):
         """
@@ -61,6 +62,6 @@ class SentimentAnalyzer(object):
 
         text_df = text_df.groupby(['Date']).apply(
             self.__sentiment_count__).reset_index().drop(['level_1'], axis=1)
-        hist_sent = pd.read_csv(self.path + keyword + '_sentiment.csv')
+        hist_sent = pd.read_csv(self.path + keyword + self.write_format)
         hist_sent = hist_sent.append(text_df)
-        hist_sent.to_csv(self.path + keyword + '_sentiment.csv', index=False)
+        hist_sent.to_csv(self.path + keyword + self.write_format, index=False)
