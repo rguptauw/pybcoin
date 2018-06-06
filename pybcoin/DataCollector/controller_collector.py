@@ -3,8 +3,6 @@
     Description: Controller module for all data collection.
 """
 
-
-import logging
 import sys
 import os
 
@@ -21,6 +19,20 @@ __directory = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(__directory + "/..")
 sys.path.append(__directory + "/../..")
 
+FILES = {
+    'btc': 'btc_prices.csv',
+    'tcount': 'tweet_counts.csv',
+    'vol': 'btc_volume.csv',
+    'gtrend': 'GTrendsData.csv',
+    'forex': 'usd_exchrate.csv',
+    'nyse': 'nyse_index.csv',
+    'oil': 'oil_price.csv',
+    'tweet': 'tweets.csv',
+    'reddit': 'reddit_comments.csv'
+}
+
+INDEX = 'Date'
+
 
 class ControllerCollector(object):
 
@@ -35,7 +47,6 @@ class ControllerCollector(object):
     """
 
     def __init__(self, config_file):
-        self.logger = logging.getLogger('simpleExample')
         self.config = SafeConfigParser()
         self.config.read(config_file)
 
@@ -51,46 +62,46 @@ class ControllerCollector(object):
             # Collecting latest BTC price.
             collector = BtcDataCollector(self.config)
 
-            path = self.config['Collector']['in_path_btc'] + 'btc_prices.csv'
+            path = self.config['Collector']['in_path_btc'] + FILES['btc']
             data = collector.fetch_btc_price()
             if isinstance(data, int):
                 print('Failure while collecting btc price')
             else:
-                hist_data = pd.read_csv(path, index_col='Date')
+                hist_data = pd.read_csv(path, index_col=INDEX)
                 hist_data = hist_data.append(data)
                 hist_data.to_csv(path)
 
             # Collecting BTC Tweet Count
 
-            path = self.config['Collector']['in_path_btc'] + 'tweet_counts.csv'
+            path = self.config['Collector']['in_path_btc'] + FILES['tcount']
             data = collector.fetch_tweet_counts()
             if isinstance(data, int):
                 print('Failure while collecting  btc tweet counts')
             else:
-                hist_data = pd.read_csv(path, index_col='Date')
+                hist_data = pd.read_csv(path, index_col=INDEX)
                 hist_data = hist_data.append(data)
                 hist_data.to_csv(path)
 
             # Collecting BTC Volume
 
-            path = self.config['Collector']['in_path_btc'] + 'btc_volume.csv'
+            path = self.config['Collector']['in_path_btc'] + FILES['vol']
             data = collector.fetch_transaction_volume()
             if isinstance(data, int):
                 print('Failure while collecting  btc trans. volume')
             else:
-                hist_data = pd.read_csv(path, index_col='Date')
+                hist_data = pd.read_csv(path, index_col=INDEX)
                 hist_data = hist_data.append(data)
                 hist_data.to_csv(path)
 
             # Collecting Google trends.
             collector = GTrendsDataCollector()
             path = self.config['Collector']['in_path_gtrends'
-                                            ] + 'GTrendsData.csv'
+                                            ] + FILES['gtrend']
             data = collector.fetch_trends()
             if isinstance(data, int):
                 print('Failure while collecting Google trends.')
             else:
-                hist_data = pd.read_csv(path, index_col='Date')
+                hist_data = pd.read_csv(path, index_col=INDEX)
                 hist_data = hist_data.append(data)
                 hist_data.to_csv(path)
 
@@ -99,38 +110,38 @@ class ControllerCollector(object):
             collector = MarketDataCollector()
 
             path = self.config['Collector']['in_path_comm'
-                                            ] + 'usd_exchrate.csv'
+                                            ] + FILES['forex']
             data = collector.fetch_usd_exrate()
             if isinstance(data, int):
                 print('Failure while collecting USD forex rate.')
             else:
-                hist_data = pd.read_csv(path, index_col='Date')
+                hist_data = pd.read_csv(path, index_col=INDEX)
                 hist_data = hist_data.append(data)
                 hist_data.to_csv(path)
 
             # Collecting NYSE composite index
 
-            path = self.config['Collector']['in_path_comm'] + 'nyse_index.csv'
+            path = self.config['Collector']['in_path_comm'] + FILES['nyse']
             data = collector.fetch_nyse_index()
             if isinstance(data, int):
                 print('Failure while collecting NYSE index.')
             else:
-                hist_data = pd.read_csv(path, index_col='Date')
+                hist_data = pd.read_csv(path, index_col=INDEX)
                 hist_data = hist_data.append(data)
                 hist_data.to_csv(path)
 
             # Collecting Crude Oil Price
-            path = self.config['Collector']['in_path_comm'] + 'oil_price.csv'
+            path = self.config['Collector']['in_path_comm'] + FILES['oil']
             data = collector.fetch_oil_price()
             if isinstance(data, int):
                 print('Failure while collecting Oil price.')
             else:
-                hist_data = pd.read_csv(path, index_col='Date')
+                hist_data = pd.read_csv(path, index_col=INDEX)
                 hist_data = hist_data.append(data)
                 hist_data.to_csv(path)
 
             # Collecting Tweets
-            path = self.config['Reddit']['data_path'] + 'tweets.csv'
+            path = self.config['Reddit']['data_path'] + FILES['tweet']
             collector = TwitterDataCollector(self.config)
             data = collector.fetch_tweets()
             if isinstance(data, int):
@@ -139,7 +150,7 @@ class ControllerCollector(object):
                 data.to_csv(path, index=False)
 
             # Collecting Reddit comments
-            path = self.config['Reddit']['data_path'] + 'reddit_comments.csv'
+            path = self.config['Reddit']['data_path'] + FILES['reddit']
             collector = RedditDataCollector(self.config)
             data = collector.fetch_reddit_comments()
             if isinstance(data, int):
@@ -151,6 +162,5 @@ class ControllerCollector(object):
             return True
 
         except Exception as e:
-            # self.logger.error(e)
             print(e)
             return True
