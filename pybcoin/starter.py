@@ -60,7 +60,9 @@ if __name__ == "__main__":
     config_file = './pybcoin/config/config.ini'
     config = SafeConfigParser()
     config.read(config_file)
-
+    dayinsecs = 86400
+    delay = 10
+    spawn_command = 'python pybcoin/home.py'
     while True:
         print('Collecting data...')
         start_data_collection(config_file)
@@ -71,7 +73,7 @@ if __name__ == "__main__":
         print('Predicting the next 24hr movement...')
         start_forecast(config)
 
-        p = subprocess.Popen('python pybcoin/home.py', shell=True)
-        time.sleep(86400)
+        p = subprocess.Popen(spawn_command, shell=True)
+        time.sleep(dayinsecs)
         kill(p.pid)
-        time.sleep(10)
+        time.sleep(delay)

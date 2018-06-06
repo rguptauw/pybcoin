@@ -5,12 +5,15 @@
     NYSE composite index.
 """
 from datetime import datetime, timedelta
-import logging
 
 import quandl
 import pandas as pd
 from googlefinance.client import get_prices_data
 from forex_python.converter import CurrencyRates
+
+DATE_FORMAT = "%Y-%m-%d"
+INDEX = 'Date'
+OIL_INDEX = "OPEC/ORB"
 
 
 class MarketDataCollector(object):
@@ -27,7 +30,6 @@ class MarketDataCollector(object):
     """
 
     def __init__(self):
-        self.logger = logging.getLogger('simpleExample')
         pass
 
     def fetch_usd_exrate(self):
@@ -41,12 +43,14 @@ class MarketDataCollector(object):
         error_val = -1
         try:
             day_count = 1
+            src_curr = 'USD'
+            dst_curr = 'EUR'
             today = datetime.now()
             start_date = today - timedelta(days=day_count)
             usd_eur_rate = pd.DataFrame([{
-                'Date': start_date.strftime("%Y-%m-%d"),
-                'forex_rate': CurrencyRates().get_rate('USD', 'EUR')}])
-            return usd_eur_rate.set_index('Date')
+                'Date': start_date.strftime(DATE_FORMAT),
+                'forex_rate': CurrencyRates().get_rate(src_curr, dst_curr)}])
+            return usd_eur_rate.set_index(INDEX)
         except Exception as e:
             # self.logger.error(e)
             print(e)
@@ -66,11 +70,11 @@ class MarketDataCollector(object):
             today = datetime.now()
             start_date = today - timedelta(days=day_count)
 
-            oil_price = quandl.get("OPEC/ORB",
-                                   start_date=start_date.strftime("%Y-%m-%d"))
+            oil_price = quandl.get(OIL_INDEX,
+                                   start_date=start_date.strftime(DATE_FORMAT))
             oil_price = oil_price.rename(columns={'Value': 'oil_price'})
             oil_price.index = pd.to_datetime(oil_price.index).date
-            oil_price.index.name = 'Date'
+            oil_price.index.name = INDEX
             return oil_price.tail(n=1)
         except Exception as e:
             # self.logger.error(e)
@@ -95,9 +99,8 @@ class MarketDataCollector(object):
             ]
             period = "5d"
             nyse_index = get_prices_data(params, period)
-            nyse_index.index.name = 'Date'
+            nyse_index.index.name = INDEX
             return nyse_index.tail(n=1)
         except Exception as e:
-            # self.logger.error(e)
             print(e)
             return error_val
