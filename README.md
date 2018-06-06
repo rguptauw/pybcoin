@@ -44,4 +44,4 @@ __Using Pip__
 
 The package can also be installed from pypi using:
 
-`pip install pybcoin==0.0.1`
+`pip install pybcoin`
