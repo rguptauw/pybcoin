@@ -32,6 +32,10 @@ To install the required Python packages and dependencies you first have to activ
 
 `pip install -r requirements.txt`
 
+If `fbprophet` installation is failing using pip, we recommend installing it using following command:
+
+`conda install -c conda-forge fbprophet`
+
 __Dash App__
 
 Once done installing requisite packages, Run the the following command:
