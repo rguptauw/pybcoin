@@ -15,7 +15,7 @@ from matplotlib import pyplot as plt
 
 # nltk.download('stopwords')
 stops = set(stopwords.words("english"))
-stops.update(['http', 'https', 'www', 'com'])
+stops.update(['http', 'https', 'www', 'com', 'fuck', 'Nan'])
 
 
 def read_data(path):
@@ -35,10 +35,11 @@ def remove_urls(text):
         : param path
         : return text(str)
     """
+    url_pattern = r'(?:(?:http|https|https://www|https://|http://|):\/\/)' \
+        '?([-a-zA-Z0-9.]{2,256}\.[a-z]{2,4})\b(?:\/[-a-zA-Z0-9@:' \
+        '%_\+.~#?&//=]*)?'
     text = re.sub(r"http\S+", "", text)
-    text = re.sub(r'(?:(?:http|https|https://www|https://|http://|):\/\/)'
-                  '?([-a-zA-Z0-9.]{2,256}\.[a-z]{2,4})\b(?:\/[-a-zA-Z0-9@:'
-                  '%_\+.~#?&//=]*)?', "", text, flags=re.MULTILINE)
+    text = re.sub(url_pattern, "", text, flags=re.MULTILINE)
     text = '\n'.join([a for a in text.split("\n") if a.strip()])
     return text
 
@@ -100,16 +101,18 @@ def create_word_cloud(text, date_generated):
         : param text
         : return png(matplotlib image)
     """
+    word_cloud_path = './pybcoin/static/date_'
     text = ' '.join(text)
     wordcloud = WordCloud(stopwords=STOPWORDS,
-                          background_color='black',
+                          background_color='white',
                           width=2500,
                           height=2000
                           ).generate(text)
     plt.figure(1, figsize=(13, 13))
     plt.imshow(wordcloud)
     plt.axis('off')
-    plt.savefig('date_' + date_generated[0].replace('/', '-') + '.png')
+    plt.savefig(word_cloud_path + date_generated[0].replace('/', '-') +
+                '.png', bbox_inches='tight')
 
 
 def pre_process_data(path):

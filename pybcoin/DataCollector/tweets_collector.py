@@ -5,9 +5,13 @@
 """
 
 from datetime import datetime, timedelta
-import logging
 import tweepy
 import pandas as pd
+
+
+DATE_FORMAT = "%Y-%m-%d"
+SEARCH_TERM = "#bitcoin"
+TWEETCOUNT = 10000
 
 
 class TwitterDataCollector(object):
@@ -23,7 +27,6 @@ class TwitterDataCollector(object):
     """
 
     def __init__(self, config):
-        self.logger = logging.getLogger('simpleExample')
         self.consumer_key = config['Twitter']['consumer_key']
         self.consumer_secret = config['Twitter']['consumer_secret']
         self.access_token = config['Twitter']['access_token']
@@ -47,16 +50,15 @@ class TwitterDataCollector(object):
             api = tweepy.API(auth, wait_on_rate_limit=True)
             bitcoin_tweets = pd.DataFrame(columns=['Date', 'text'])
             for tweet in tweepy.Cursor(
-                    api.search, q="#bitcoin", count=100,
+                    api.search, q=SEARCH_TERM, count=100,
                     lang="en",
-                    since=start_date.strftime("%Y-%m-%d"),
-                    until=today.strftime("%Y-%m-%d")).items(10000):
+                    since=start_date.strftime(DATE_FORMAT),
+                    until=today.strftime(DATE_FORMAT)).items(TWEETCOUNT):
                 bitcoin_tweets = bitcoin_tweets.append({
                     'Date': tweet.created_at.date(),
                     'text': tweet.text.encode('utf-8')},
                     ignore_index=True)
             return bitcoin_tweets
         except Exception as e:
-            # self.logger.error(e)
             print(e)
             return error_val

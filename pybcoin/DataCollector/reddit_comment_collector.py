@@ -7,10 +7,14 @@
 from datetime import datetime, timedelta
 import time
 import json
-import logging
 
 import requests
 import pandas as pd
+
+DAYINSECS = 86400
+START_LABEL = 'START_UTC'
+END_LABEL = 'END_UTC'
+JSON_FILE = 'output.json'
 
 
 class RedditDataCollector(object):
@@ -25,9 +29,8 @@ class RedditDataCollector(object):
     """
 
     def __init__(self, config):
-        self.logger = logging.getLogger('simpleExample')
         self.api_uri = config['Reddit']['api-uri']
-        self.output_path = config['Reddit']['json_path']
+        self.output_path = config['Reddit']['data_path']
 
     def fetch_reddit_comments(self):
         """
@@ -41,17 +44,18 @@ class RedditDataCollector(object):
         error_val = -1
         try:
             day_count = 1
-            today = datetime.now()
-            for single_date in (today + timedelta(n)
+            today = datetime.now().replace(hour=0, minute=0,
+                                           second=0, microsecond=0)
+            for single_date in (today - timedelta(n)
                                 for n in range(day_count)):
                 # self.logger.error('Fetching Reddit comments for:'
                 #                   , single_date)
                 single_date_utc = single_date.timetuple()
                 single_date_utc = time.mktime(single_date_utc)
                 url = self.api_uri
-                url = url.replace('START_UTC',
-                                  str(int(single_date_utc - 86400)))
-                url = url.replace('END_UTC', str(int(single_date_utc)))
+                url = url.replace(START_LABEL,
+                                  str(int(single_date_utc - DAYINSECS)))
+                url = url.replace(END_LABEL, str(int(single_date_utc)))
                 res = requests.get(url)
                 data = res.json()
                 data = data['hits']['hits']
@@ -62,13 +66,13 @@ class RedditDataCollector(object):
                                     'text': comment['body'],
                                     'Date': comment['created_utc']
                                     })
-                with open(self.output_path,
+                with open(self.output_path + JSON_FILE,
                           'w+', encoding='utf-8') as f:
                     json.dump(comments, f)
-            reddit_comments = pd.read_json(self.output_path,
+            reddit_comments = pd.read_json(self.output_path + JSON_FILE,
                                            orient='records')
+            reddit_comments['Date'] = (today - timedelta(1)).date()
             return reddit_comments
         except Exception as e:
-            # self.logger.error(e)
             print(e)
             return error_val

@@ -13,6 +13,12 @@ import quandl
 from forex_python.bitcoin import BtcConverter
 
 
+DATE_FORMAT = "%Y-%m-%d"
+INDEX = 'Date'
+EXCHANGE = "BCHAIN/ETRVU"
+CURRENCY = "USD"
+
+
 class BtcDataCollector(object):
 
     """
@@ -46,13 +52,14 @@ class BtcDataCollector(object):
         """
         error_val = -1
         try:
+            day_count = 1
             today = datetime.now()
-            start_date = today - timedelta(days=1)
+            start_date = today - timedelta(days=day_count)
             btc_price = pd.DataFrame([{
-                'Date': start_date.strftime("%Y-%m-%d"),
+                'Date': start_date.strftime(DATE_FORMAT),
                 'btc_price': BtcConverter(
-                ).get_previous_price('USD', start_date)}])
-            return btc_price.set_index('Date')
+                ).get_previous_price(CURRENCY, start_date)}])
+            return btc_price.set_index(INDEX)
         except Exception as e:
             # self.logger.error(e)
             print(e)
@@ -75,7 +82,7 @@ class BtcDataCollector(object):
             start_date = today - timedelta(days=day_count)
             url = self.tweet_count_url
             page = requests.get(url)
-            first = '[new Date("' + start_date.strftime("%Y/%m/%d") + '"),'
+            first = '[new Date("' + start_date.strftime(DATE_FORMAT) + '"),'
             last = ']'
             start = page.text.rindex(first) + len(first)
             end = page.text.find(last, start)
@@ -85,9 +92,9 @@ class BtcDataCollector(object):
             else:
                 count = int(page.text[start:end])
             tweet_count = pd.DataFrame({
-                'Date': [start_date.strftime("%Y/%m/%d")],
+                'Date': [start_date.strftime(DATE_FORMAT)],
                 'tweet_count': [count]})
-            return tweet_count.set_index('Date')
+            return tweet_count.set_index(INDEX)
         except Exception as e:
             # self.logger.error(e)
             print(e)
@@ -103,13 +110,16 @@ class BtcDataCollector(object):
         """
         error_val = -1
         try:
-            day_count = 1
+
+            day_count = 5
             today = datetime.now()
             start_date = today - timedelta(days=day_count)
-            volume = quandl.get("BCHAIN/ETRVU",
-                                start_date=start_date.strftime("%Y-%m-%d"),
+            volume = quandl.get(EXCHANGE,
+                                start_date=start_date.strftime(DATE_FORMAT),
                                 api_key=self.api_key)
-            return volume
+            volume.index = pd.to_datetime(volume.index).date
+            volume.index.name = INDEX
+            return volume.tail(n=1)
         except Exception as e:
             # self.logger.error(e)
             print(e)

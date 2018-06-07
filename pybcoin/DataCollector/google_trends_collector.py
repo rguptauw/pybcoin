@@ -5,10 +5,12 @@
 """
 
 from datetime import datetime, timedelta
-import logging
 
 import pandas as pd
 from pytrends.request import TrendReq
+
+DATE_FORMAT = "%Y-%m-%d"
+INDEX = 'Date'
 
 
 class GTrendsDataCollector(object):
@@ -22,7 +24,7 @@ class GTrendsDataCollector(object):
     """
 
     def __init__(self, params=None):
-        self.logger = logging.getLogger('simpleExample')
+        pass
 
     def fetch_trends(self, params=None):
         """
@@ -41,16 +43,17 @@ class GTrendsDataCollector(object):
             df_final = pd.DataFrame()
             today = datetime.now()
             start_date = today - timedelta(days=day_count)
-            date_range = start_date.strftime("%Y-%m-%d")\
-                + ' ' + today.strftime("%Y-%m-%d")
+            date_range = start_date.strftime(DATE_FORMAT)\
+                + ' ' + today.strftime(DATE_FORMAT)
             for wordlist in kw_lists:
                 pytrends.build_payload([wordlist], cat=0,
                                        timeframe=date_range,
                                        geo='', gprop='')
                 df_final = pd.concat([df_final,
                                      pytrends.interest_over_time()], axis=1)
+            df_final.index = pd.to_datetime(df_final.index).date
+            df_final.index.name = INDEX
             return df_final[kw_lists].tail(n=1)
         except Exception as e:
-            # self.logger.error(e)
             print(e)
             return error_val

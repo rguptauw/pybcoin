@@ -3,8 +3,11 @@
     Description: Controller module for all data collection.
 """
 
-import logging
+import sys
+import os
 
+import pandas as pd
+from configparser import SafeConfigParser
 
 from pybcoin.DataCollector.btc_data_collector import BtcDataCollector
 from pybcoin.DataCollector.google_trends_collector import GTrendsDataCollector
@@ -12,7 +15,23 @@ from pybcoin.DataCollector.market_data_collector import MarketDataCollector
 from pybcoin.DataCollector.reddit_comment_collector import RedditDataCollector
 from pybcoin.DataCollector.tweets_collector import TwitterDataCollector
 
-from configparser import SafeConfigParser
+__directory = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(__directory + "/..")
+sys.path.append(__directory + "/../..")
+
+FILES = {
+    'btc': 'btc_prices.csv',
+    'tcount': 'tweet_counts.csv',
+    'vol': 'btc_volume.csv',
+    'gtrend': 'GTrendsData.csv',
+    'forex': 'usd_exchrate.csv',
+    'nyse': 'nyse_index.csv',
+    'oil': 'oil_price.csv',
+    'tweet': 'tweets.csv',
+    'reddit': 'reddit_comments.csv'
+}
+
+INDEX = 'Date'
 
 
 class ControllerCollector(object):
@@ -28,7 +47,6 @@ class ControllerCollector(object):
     """
 
     def __init__(self, config_file):
-        self.logger = logging.getLogger('simpleExample')
         self.config = SafeConfigParser()
         self.config.read(config_file)
 
@@ -40,75 +58,109 @@ class ControllerCollector(object):
             : return ret_val(int)
 
         """
-        collection_complete = False
         try:
             # Collecting latest BTC price.
             collector = BtcDataCollector(self.config)
+
+            path = self.config['Collector']['in_path_btc'] + FILES['btc']
             data = collector.fetch_btc_price()
-            if data == -1:
-                return collection_complete
-            data.to_csv('./data/latest/btc_prices.csv')
+            if isinstance(data, int):
+                print('Failure while collecting btc price')
+            else:
+                hist_data = pd.read_csv(path, index_col=INDEX)
+                hist_data = hist_data.append(data)
+                hist_data.to_csv(path)
 
             # Collecting BTC Tweet Count
+
+            path = self.config['Collector']['in_path_btc'] + FILES['tcount']
             data = collector.fetch_tweet_counts()
-            if data == -1:
-                return collection_complete
-            data.to_csv('./data/latest/tweet_counts.csv')
+            if isinstance(data, int):
+                print('Failure while collecting  btc tweet counts')
+            else:
+                hist_data = pd.read_csv(path, index_col=INDEX)
+                hist_data = hist_data.append(data)
+                hist_data.to_csv(path)
 
             # Collecting BTC Volume
+
+            path = self.config['Collector']['in_path_btc'] + FILES['vol']
             data = collector.fetch_transaction_volume()
-            if data == -1:
-                return collection_complete
-            data.to_csv('./data/latest/btc_volume.csv')
+            if isinstance(data, int):
+                print('Failure while collecting  btc trans. volume')
+            else:
+                hist_data = pd.read_csv(path, index_col=INDEX)
+                hist_data = hist_data.append(data)
+                hist_data.to_csv(path)
 
             # Collecting Google trends.
             collector = GTrendsDataCollector()
+            path = self.config['Collector']['in_path_gtrends'
+                                            ] + FILES['gtrend']
             data = collector.fetch_trends()
-            if data == -1:
-                return collection_complete
-            data.to_csv('./data/latest/gtrends.csv')
+            if isinstance(data, int):
+                print('Failure while collecting Google trends.')
+            else:
+                hist_data = pd.read_csv(path, index_col=INDEX)
+                hist_data = hist_data.append(data)
+                hist_data.to_csv(path)
 
             # Collecting USD/EURO forex rate
+
             collector = MarketDataCollector()
+
+            path = self.config['Collector']['in_path_comm'
+                                            ] + FILES['forex']
             data = collector.fetch_usd_exrate()
-            if data == -1:
-                return collection_complete
-            data.to_csv('./data/latest/usd_exchrate.csv')
+            if isinstance(data, int):
+                print('Failure while collecting USD forex rate.')
+            else:
+                hist_data = pd.read_csv(path, index_col=INDEX)
+                hist_data = hist_data.append(data)
+                hist_data.to_csv(path)
 
             # Collecting NYSE composite index
+
+            path = self.config['Collector']['in_path_comm'] + FILES['nyse']
             data = collector.fetch_nyse_index()
-            if data == -1:
-                return collection_complete
-            data.to_csv('./data/latest/nyse_index.csv')
+            if isinstance(data, int):
+                print('Failure while collecting NYSE index.')
+            else:
+                hist_data = pd.read_csv(path, index_col=INDEX)
+                hist_data = hist_data.append(data)
+                hist_data.to_csv(path)
 
             # Collecting Crude Oil Price
+            path = self.config['Collector']['in_path_comm'] + FILES['oil']
             data = collector.fetch_oil_price()
-            if data == -1:
-                return collection_complete
-            data.to_csv('./data/latest/oil_price.csv')
+            if isinstance(data, int):
+                print('Failure while collecting Oil price.')
+            else:
+                hist_data = pd.read_csv(path, index_col=INDEX)
+                hist_data = hist_data.append(data)
+                hist_data.to_csv(path)
 
             # Collecting Tweets
+            path = self.config['Reddit']['data_path'] + FILES['tweet']
             collector = TwitterDataCollector(self.config)
             data = collector.fetch_tweets()
-            if data == -1:
-                return collection_complete
-            data.to_csv('./data/latest/tweets.csv', index=False)
+            if isinstance(data, int):
+                print('Failure while collecting tweets.')
+            else:
+                data.to_csv(path, index=False)
 
-            # Collecting Tweets
+            # Collecting Reddit comments
+            path = self.config['Reddit']['data_path'] + FILES['reddit']
             collector = RedditDataCollector(self.config)
             data = collector.fetch_reddit_comments()
-            if data == -1:
-                return collection_complete
-            data.to_csv('./data/latest/reddit_comments.csv', index=False)
+            if isinstance(data, int):
+                print('Failure while collecting reddit comments.')
+            else:
+                data.to_csv(path, index=False)
 
-            collection_complete = True
             print('Data Collection complete')
-            return collection_complete
-        except Exception as e:
-            # self.logger.error(e)
-            print(e)
-            return collection_complete
+            return True
 
-# controller = ControllerCollector('./pybcoin/config/config.ini')
-# val = controller.data_collection_pipeline()
-# print(val)
+        except Exception as e:
+            print(e)
+            return True
