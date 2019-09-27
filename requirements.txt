@@ -14,7 +14,7 @@ pytrends==4.4.0
 requests==2.18.4
 forex_python==1.0.0
 plotly==2.6.0
-nltk==3.2.5
+nltk==3.4.5
 fbprophet==0.2.1
 googlefinance==0.7
 scikit_learn==0.19.1
